@@ -66,6 +66,7 @@ export default function BedroomCalculator() {
   );
   const [scopeId, setScopeId] = useState<BedroomScopeId>("wardrobe");
   const [packageId, setPackageId] = useState<PackageId>("premium");
+  const [hasStarted, setHasStarted] = useState(false);
 
   const type = getBedroomType(typeId);
   const scope = getBedroomScope(scopeId);
@@ -81,9 +82,14 @@ export default function BedroomCalculator() {
 
   const selectType = (value: BedroomTypeId) => {
     const nextType = getBedroomType(value);
+    setHasStarted(true);
     setTypeId(value);
     setWardrobeWidthFt(nextType.defaultWallFt);
     setWardrobeHeightFt(nextType.defaultHeightFt);
+  };
+
+  const goNext = () => {
+    setStep((current) => Math.min(steps.length - 1, current + 1));
   };
 
   const reset = () => {
@@ -93,6 +99,13 @@ export default function BedroomCalculator() {
     setWardrobeHeightFt(initialType.defaultHeightFt);
     setScopeId("wardrobe");
     setPackageId("premium");
+    setHasStarted(false);
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.querySelector<HTMLElement>(".calc-tabs-root")?.scrollIntoView({
+      behavior: reduced ? "auto" : "smooth",
+      block: "start",
+    });
   };
 
   return (
@@ -101,13 +114,14 @@ export default function BedroomCalculator() {
         steps={steps}
         current={step}
         canContinue
+        isReady={hasStarted}
         onBack={() => setStep((current) => Math.max(0, current - 1))}
-        onContinue={() => setStep((current) => Math.min(steps.length - 1, current + 1))}
+        onContinue={goNext}
         ctaLocation="price_calculator_bedroom"
       >
         {step === 0 ? (
           <RadioGroup
-            value={typeId}
+            value={hasStarted ? typeId : ""}
             onValueChange={(next) => selectType(String(next) as BedroomTypeId)}
             className="calc-choice-grid calc-choice-grid--three"
             aria-label="Bedroom type"
@@ -116,7 +130,7 @@ export default function BedroomCalculator() {
               <ChoiceCard
                 key={option.id}
                 value={option.id}
-                checked={typeId === option.id}
+                checked={hasStarted && typeId === option.id}
                 title={option.name}
                 description={option.summary}
               />
@@ -137,7 +151,10 @@ export default function BedroomCalculator() {
                 step={1}
                 unit="ft"
                 hint="The wall the wardrobe will sit on"
-                onChange={setWardrobeWidthFt}
+                onChange={(value) => {
+                  setHasStarted(true);
+                  setWardrobeWidthFt(value);
+                }}
               />
               <RangeField
                 id="wardrobe-height"
@@ -148,7 +165,10 @@ export default function BedroomCalculator() {
                 step={1}
                 unit="ft"
                 hint="Floor to ceiling is usually 9–10 ft"
-                onChange={setWardrobeHeightFt}
+                onChange={(value) => {
+                  setHasStarted(true);
+                  setWardrobeHeightFt(value);
+                }}
               />
               <p className="calc-hint">
                 Front area: <strong>{area} sq ft</strong>. The loft is included
@@ -160,8 +180,11 @@ export default function BedroomCalculator() {
 
         {step === 2 ? (
           <RadioGroup
-            value={scopeId}
-            onValueChange={(next) => setScopeId(String(next) as BedroomScopeId)}
+            value={hasStarted ? scopeId : ""}
+            onValueChange={(next) => {
+              setHasStarted(true);
+              setScopeId(String(next) as BedroomScopeId);
+            }}
             className="calc-choice-grid calc-choice-grid--three"
             aria-label="Bedroom scope"
           >
@@ -169,7 +192,7 @@ export default function BedroomCalculator() {
               <ChoiceCard
                 key={option.id}
                 value={option.id}
-                checked={scopeId === option.id}
+                checked={hasStarted && scopeId === option.id}
                 title={option.name}
                 description={option.summary}
               />
@@ -182,8 +205,11 @@ export default function BedroomCalculator() {
             <PackageCards
               calculator="bedroom"
               media={PACKAGE_MEDIA.bedroom}
-              value={packageId}
-              onChange={setPackageId}
+              value={hasStarted ? packageId : ""}
+              onChange={(next) => {
+                setHasStarted(true);
+                setPackageId(next);
+              }}
             />
             <p className="calc-note">
               Your estimate includes {scope.inclusions.join(", ").toLowerCase()}.
@@ -199,6 +225,7 @@ export default function BedroomCalculator() {
         subtitle={`${type.name} · ${wardrobeWidthFt} × ${wardrobeHeightFt} ft wardrobe · ${pkg.name}`}
         ctaLocation="price_calculator_bedroom"
         onReset={reset}
+        isReady={hasStarted}
       />
     </div>
   );

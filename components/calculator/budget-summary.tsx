@@ -11,6 +11,7 @@ type BudgetSummaryProps = {
   subtitle: string;
   ctaLocation: string;
   onReset: () => void;
+  isReady?: boolean;
 };
 
 export default function BudgetSummary({
@@ -18,44 +19,72 @@ export default function BudgetSummary({
   subtitle,
   ctaLocation,
   onReset,
+  isReady = true,
 }: BudgetSummaryProps) {
   return (
     <aside className="calc-summary" aria-label="Your estimate">
       <span className="calc-summary-eyebrow">Your indicative estimate</span>
       <output className="calc-summary-total" aria-live="polite">
-        {formatINR(estimate.total)}
+        {formatINR(isReady ? estimate.total : 0)}
       </output>
-      <p className="calc-summary-subtitle">{subtitle}</p>
+      <p className="calc-summary-subtitle">
+        {isReady ? subtitle : "Make a selection to see your estimate."}
+      </p>
 
-      <Separator className="calc-summary-separator" />
+      {isReady ? (
+        <>
+          <Separator className="calc-summary-separator" />
 
-      <div className="calc-summary-lines">
-        {estimate.lines.map((line) => (
-          <div className="calc-summary-line" key={`${line.label}-${line.amount}`}>
-            <span className="calc-summary-line-copy">
-              <span>{line.label}</span>
-              {line.detail ? <small>{line.detail}</small> : null}
-            </span>
-            <span className="calc-summary-line-amount">
-              {formatINR(line.amount)}
-            </span>
+          <div className="calc-summary-lines">
+            {estimate.lines.map((line) => (
+              <div
+                className="calc-summary-line"
+                key={`${line.label}-${line.amount}`}
+              >
+                <span className="calc-summary-line-copy">
+                  <span>{line.label}</span>
+                  {line.detail ? <small>{line.detail}</small> : null}
+                </span>
+                <span className="calc-summary-line-amount">
+                  {formatINR(line.amount)}
+                </span>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      <p className="calc-summary-note">{estimate.notes[0]}</p>
+          <p className="calc-summary-note">{estimate.notes[0]}</p>
+        </>
+      ) : (
+        <p className="calc-summary-note">
+          Choose your space details and finish to see your detailed breakdown.
+        </p>
+      )}
 
-      <Link
-        className={cn(
-          buttonVariants(),
-          "calc-btn calc-btn--accent calc-summary-cta",
-        )}
-        href="/#contact"
-        data-enquiry-location={ctaLocation}
-      >
-        Get an exact quote
-        <ArrowRight aria-hidden="true" />
-      </Link>
+      {isReady ? (
+        <Link
+          className={cn(
+            buttonVariants(),
+            "calc-btn calc-btn--accent calc-summary-cta",
+          )}
+          href="/#contact"
+          data-enquiry-location={ctaLocation}
+        >
+          Get an exact quote
+          <ArrowRight aria-hidden="true" />
+        </Link>
+      ) : (
+        <Button
+          type="button"
+          disabled
+          className={cn(
+            "calc-btn calc-btn--accent calc-summary-cta",
+          )}
+          aria-label="Make a selection to get an exact quote"
+        >
+          Get an exact quote
+          <ArrowRight aria-hidden="true" />
+        </Button>
+      )}
 
       <p className="calc-summary-fine">
         Indicative only. Excludes GST and site-specific work. Final quote

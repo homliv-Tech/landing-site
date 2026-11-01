@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 type PackageCardsProps = {
   calculator: CalculatorId;
   media: Record<PackageId, string>;
-  value: PackageId;
+  value: PackageId | "";
   onChange: (value: PackageId) => void;
 };
 
