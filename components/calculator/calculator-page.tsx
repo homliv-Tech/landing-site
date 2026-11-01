@@ -92,11 +92,6 @@ export default function CalculatorPage() {
   const selectTab = (id: CalculatorId) => {
     setActive(id);
     window.history.replaceState(null, "", `#${id}`);
-
-    const root = document.querySelector<HTMLElement>(".calc-tabs-root");
-    if (root && root.getBoundingClientRect().top < 0) {
-      root.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
   };
 
   return (

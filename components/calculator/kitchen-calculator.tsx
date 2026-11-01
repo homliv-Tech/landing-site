@@ -63,6 +63,7 @@ export default function KitchenCalculator() {
   >(() => defaultKitchenMeasurements(initialLayout));
   const [packageId, setPackageId] = useState<PackageId>("premium");
   const [addOnIds, setAddOnIds] = useState<string[]>([]);
+  const [hasStarted, setHasStarted] = useState(false);
 
   const layout = getKitchenLayout(layoutId);
   const pkg = getPackage(packageId);
@@ -75,16 +76,22 @@ export default function KitchenCalculator() {
   });
 
   const selectLayout = (value: KitchenLayoutId) => {
+    setHasStarted(true);
     setLayoutId(value);
     setMeasurements(defaultKitchenMeasurements(getKitchenLayout(value)));
   };
 
   const toggleAddOn = (id: string) => {
+    setHasStarted(true);
     setAddOnIds((current) =>
       current.includes(id)
         ? current.filter((item) => item !== id)
         : [...current, id],
     );
+  };
+
+  const goNext = () => {
+    setStep((current) => Math.min(steps.length - 1, current + 1));
   };
 
   const reset = () => {
@@ -93,6 +100,13 @@ export default function KitchenCalculator() {
     setMeasurements(defaultKitchenMeasurements(initialLayout));
     setPackageId("premium");
     setAddOnIds([]);
+    setHasStarted(false);
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.querySelector<HTMLElement>(".calc-tabs-root")?.scrollIntoView({
+      behavior: reduced ? "auto" : "smooth",
+      block: "start",
+    });
   };
 
   return (
@@ -101,13 +115,14 @@ export default function KitchenCalculator() {
         steps={steps}
         current={step}
         canContinue
+        isReady={hasStarted}
         onBack={() => setStep((current) => Math.max(0, current - 1))}
-        onContinue={() => setStep((current) => Math.min(steps.length - 1, current + 1))}
+        onContinue={goNext}
         ctaLocation="price_calculator_kitchen"
       >
         {step === 0 ? (
           <RadioGroup
-            value={layoutId}
+            value={hasStarted ? layoutId : ""}
             onValueChange={(next) =>
               selectLayout(String(next) as KitchenLayoutId)
             }
@@ -118,7 +133,7 @@ export default function KitchenCalculator() {
               <ChoiceCard
                 key={option.id}
                 value={option.id}
-                checked={layoutId === option.id}
+                checked={hasStarted && layoutId === option.id}
                 title={option.name}
                 description={option.summary}
                 media={<KitchenLayoutDiagram layout={option.id} />}
@@ -131,9 +146,10 @@ export default function KitchenCalculator() {
           <MeasurementFields
             layout={layout}
             values={measurements}
-            onChange={(key, value) =>
-              setMeasurements((current) => ({ ...current, [key]: value }))
-            }
+            onChange={(key, value) => {
+              setHasStarted(true);
+              setMeasurements((current) => ({ ...current, [key]: value }));
+            }}
           />
         ) : null}
 
@@ -142,8 +158,11 @@ export default function KitchenCalculator() {
             <PackageCards
               calculator="kitchen"
               media={PACKAGE_MEDIA.kitchen}
-              value={packageId}
-              onChange={setPackageId}
+              value={hasStarted ? packageId : ""}
+              onChange={(next) => {
+                setHasStarted(true);
+                setPackageId(next);
+              }}
             />
 
             <fieldset className="calc-addons">
@@ -185,6 +204,7 @@ export default function KitchenCalculator() {
         subtitle={`${layout.name} · ${runFeet} running ft · ${pkg.name}`}
         ctaLocation="price_calculator_kitchen"
         onReset={reset}
+        isReady={hasStarted}
       />
     </div>
   );

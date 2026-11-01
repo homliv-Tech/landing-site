@@ -19,6 +19,7 @@ type StepFlowProps = {
   current: number;
   children: ReactNode;
   canContinue?: boolean;
+  isReady?: boolean;
   onBack: () => void;
   onContinue: () => void;
   ctaLocation: string;
@@ -29,6 +30,7 @@ export default function StepFlow({
   current,
   children,
   canContinue = true,
+  isReady = true,
   onBack,
   onContinue,
   ctaLocation,
@@ -44,8 +46,18 @@ export default function StepFlow({
       didMount.current = true;
       return;
     }
+
+    const panel = panelRef.current;
+    if (!panel) return;
+
+    const stickyHeight =
+      document.querySelector<HTMLElement>(".calc-tabs-wrap")?.offsetHeight ?? 0;
+    const panelTop = panel.getBoundingClientRect().top;
+
+    if (panelTop >= stickyHeight + 12) return;
+
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    panelRef.current?.scrollIntoView({
+    panel.scrollIntoView({
       behavior: reduced ? "auto" : "smooth",
       block: "start",
     });
@@ -99,17 +111,29 @@ export default function StepFlow({
           </Button>
 
           {isLast ? (
-            <Link
-              className={cn(
-                buttonVariants(),
-                "calc-btn calc-btn--accent",
-              )}
-              href="/#contact"
-              data-enquiry-location={ctaLocation}
-            >
-              Get an exact quote
-              <ArrowRight aria-hidden="true" />
-            </Link>
+            isReady ? (
+              <Link
+                className={cn(
+                  buttonVariants(),
+                  "calc-btn calc-btn--accent",
+                )}
+                href="/#contact"
+                data-enquiry-location={ctaLocation}
+              >
+                Get an exact quote
+                <ArrowRight aria-hidden="true" />
+              </Link>
+            ) : (
+              <Button
+                type="button"
+                className="calc-btn calc-btn--accent"
+                disabled
+                aria-label="Make a selection to get an exact quote"
+              >
+                Get an exact quote
+                <ArrowRight aria-hidden="true" />
+              </Button>
+            )
           ) : (
             <Button
               type="button"

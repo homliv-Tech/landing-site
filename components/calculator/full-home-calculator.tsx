@@ -60,6 +60,7 @@ export default function FullHomeCalculator() {
     defaultRoomsForBhk(2),
   );
   const [packageId, setPackageId] = useState<PackageId>("premium");
+  const [hasStarted, setHasStarted] = useState(false);
 
   const bhkOption = findBhkOption(bhkId);
   const variant = findBhkVariant(bhkOption, variantId);
@@ -72,6 +73,7 @@ export default function FullHomeCalculator() {
     (total, count) => total + count,
     0,
   );
+  const isEstimateReady = hasStarted && totalRooms > 0;
   const estimate = calculateFullHome({
     bhkId,
     variantId,
@@ -84,6 +86,7 @@ export default function FullHomeCalculator() {
     const nextOption = findBhkOption(next.bhkId);
     const nextVariant = findBhkVariant(nextOption, next.variantId);
     const nextCount = Number.parseInt(nextOption.id, 10) || 1;
+    setHasStarted(true);
     setBhkId(nextOption.id);
     setVariantId(nextVariant.id);
     setArea(nextVariant.area);
@@ -91,10 +94,15 @@ export default function FullHomeCalculator() {
   };
 
   const updateRoom = (room: RoomId, count: number) => {
+    setHasStarted(true);
     setRooms((current) => ({
       ...current,
       [room]: Math.min(maxes[room] ?? 0, Math.max(0, count)),
     }));
+  };
+
+  const goNext = () => {
+    setStep((current) => Math.min(steps.length - 1, current + 1));
   };
 
   const reset = () => {
@@ -104,6 +112,13 @@ export default function FullHomeCalculator() {
     setArea(defaultVariant.area);
     setRooms(defaultRoomsForBhk(2));
     setPackageId("premium");
+    setHasStarted(false);
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.querySelector<HTMLElement>(".calc-tabs-root")?.scrollIntoView({
+      behavior: reduced ? "auto" : "smooth",
+      block: "start",
+    });
   };
 
   return (
@@ -112,13 +127,14 @@ export default function FullHomeCalculator() {
         steps={steps}
         current={step}
         canContinue={step !== 2 || totalRooms > 0}
+        isReady={isEstimateReady}
         onBack={() => setStep((current) => Math.max(0, current - 1))}
-        onContinue={() => setStep((current) => Math.min(steps.length - 1, current + 1))}
+        onContinue={goNext}
         ctaLocation="price_calculator_full_home"
       >
         {step === 0 ? (
           <BhkSelector
-            value={{ bhkId, variantId }}
+            value={hasStarted ? { bhkId, variantId } : { bhkId: "", variantId: "" }}
             onChange={selectBhk}
           />
         ) : null}
@@ -134,7 +150,10 @@ export default function FullHomeCalculator() {
               step={25}
               unit="sq ft"
               hint={`Typical for a ${bhkOption.label.toLowerCase()} ${variant.label.toLowerCase()} home: ${variant.area.toLocaleString("en-IN")} sq ft`}
-              onChange={setArea}
+              onChange={(value) => {
+                setHasStarted(true);
+                setArea(value);
+              }}
             />
             <div className="calc-area-context">
               <span>{bhkOption.label}</span>
@@ -169,8 +188,11 @@ export default function FullHomeCalculator() {
             <PackageCards
               calculator="full-home"
               media={PACKAGE_MEDIA["full-home"]}
-              value={packageId}
-              onChange={setPackageId}
+              value={hasStarted ? packageId : ""}
+              onChange={(next) => {
+                setHasStarted(true);
+                setPackageId(next);
+              }}
             />
             <p className="calc-note">
               Room estimates include modular cabinetry, finishes and standard
@@ -186,6 +208,7 @@ export default function FullHomeCalculator() {
         subtitle={`${bhkOption.label} ${variant.label.toLowerCase()} · ${area.toLocaleString("en-IN")} sq ft · ${totalRooms} rooms · ${pkg.name}`}
         ctaLocation="price_calculator_full_home"
         onReset={reset}
+        isReady={isEstimateReady}
       />
     </div>
   );
