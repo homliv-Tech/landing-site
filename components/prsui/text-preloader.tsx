@@ -147,6 +147,7 @@ export const TextPreloader = ({
   return (
     <section
       aria-label="Hero"
+      data-preloader-active={showOverlay}
       className={cn(
         "relative isolate min-h-screen w-full overflow-hidden bg-background text-foreground",
         className
