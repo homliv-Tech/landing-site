@@ -2,11 +2,12 @@ import { randomUUID } from "node:crypto";
 import { reserveEnquirySlot } from "@/lib/enquiry-quota";
 import { getDb } from "@/lib/db";
 import { enquiries } from "@/lib/schema";
+import type { EnquiryRequest } from "@/lib/enquiry";
 import { backupEnquiries } from "@/lib/sheets";
 
 
-export async function POST(request: Request) {
-  let body: unknown;
+export async function POST(request: Request): Promise<Response> {
+  let rawBody: unknown;
   try {
     const reader = request.body?.getReader();
     const decoder = new TextDecoder();
@@ -29,16 +30,19 @@ export async function POST(request: Request) {
         reader.releaseLock();
       }
     }
-    body = JSON.parse(text);
+    rawBody = JSON.parse(text);
   } catch {
     return Response.json({ error: "Invalid JSON." }, { status: 400 });
   }
-  if (!body || typeof body !== "object" || Array.isArray(body)) return Response.json({ error: "Invalid enquiry." }, { status: 400 });
-  const data = body as Record<string, unknown>;
-  const name = typeof data.name === "string" ? data.name.trim() : "";
-  const email = typeof data.email === "string" ? data.email.trim() : "";
-  const phone = typeof data.phone === "string" ? data.phone.trim() : "";
-  const message = typeof data.message === "string" ? data.message.trim() : "";
+  if (!rawBody || typeof rawBody !== "object" || Array.isArray(rawBody)) return Response.json({ error: "Invalid enquiry." }, { status: 400 });
+  const data = rawBody as { [K in keyof EnquiryRequest]?: unknown };
+  const body: EnquiryRequest = {
+    name: typeof data.name === "string" ? data.name.trim() : "",
+    email: typeof data.email === "string" ? data.email.trim() : "",
+    phone: typeof data.phone === "string" ? data.phone.trim() : "",
+    message: typeof data.message === "string" ? data.message.trim() : "",
+  };
+  const { name, email, phone = "", message } = body;
   if (!name || name.length > 200 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254 || phone.length > 50 || !message || message.length > 5000) {
     return Response.json({ error: "Please provide a valid name, email and message." }, { status: 400 });
   }
