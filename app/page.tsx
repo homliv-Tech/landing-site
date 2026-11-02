@@ -1,6 +1,7 @@
 import SiteFooter from "@/components/site-footer";
 import SiteHeader from "@/components/site-header";
 import TextPreloader from "@/components/prsui/text-preloader";
+import ConsultationForm from "@/components/consultation-form";
 
 const Arrow = () => <span aria-hidden="true">↗</span>;
 const inspirations = [
@@ -32,7 +33,21 @@ export default function Home() {
 
         <section className="approach" id="approach" data-analytics-section="approach"><div className="approach-image" role="img" aria-label="Bright, open-plan home interior" /><div className="approach-copy"><span className="small-label">Our Approach</span><h2>Thoughtful design.<br />A clearer path forward.</h2><p>Good design begins with listening. We take the time to understand your vision and turn it into a home that feels right for you.</p><p>With architectural work delivered within 60 days, you can move toward what comes next with confidence.</p><a href="#contact" className="round-link" data-enquiry-location="approach"><span>Start your project</span><i><Arrow /></i></a></div></section>
 
-        <section className="contact section-space" id="contact" data-analytics-section="contact"><span className="small-label">Your next chapter</span><h2>Tell us about<br />your project.</h2><p>Have an idea for a place to call home? We’d love to hear about it.</p><p className="contact-note">Contact details coming soon.</p></section>
+        <section className="contact section-space" id="contact" data-analytics-section="contact">
+          <div className="contact-layout">
+            <div className="contact-intro">
+              <span className="small-label">Your next chapter</span>
+              <h2>Let’s create a home that feels like yours.</h2>
+              <p>Share a few details about your space and priorities. Our design team will call you to understand the project and guide you through the next steps.</p>
+              <div className="contact-assurance" aria-label="Consultation details">
+                <span><strong>01</strong> Free discovery call</span>
+                <span><strong>02</strong> No obligation</span>
+                <span><strong>03</strong> Clear next steps</span>
+              </div>
+            </div>
+            <ConsultationForm />
+          </div>
+        </section>
         <SiteFooter />
       </main>
     </TextPreloader>

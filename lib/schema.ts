@@ -4,9 +4,14 @@ import { sql } from "drizzle-orm";
 export const enquiries = pgTable("enquiries", {
   id: uuid("id").primaryKey(),
   name: text("name").notNull(),
-  email: text("email").notNull(),
+  email: text("email"),
+  // Kept nullable during the expand phase so the previous app version can
+  // continue writing while the new form is rolled out. The API requires it.
   phone: text("phone"),
-  message: text("message").notNull(),
+  address: text("address"),
+  apartmentType: text("apartment_type"),
+  budget: text("budget"),
+  message: text("message"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   sheetsBackedUpAt: timestamp("sheets_backed_up_at", { withTimezone: true }),
 }, (table) => [
@@ -18,4 +23,6 @@ export const enquiryQuota = pgTable("enquiry_quota", {
   key: text("key").primaryKey(),
   windowStartedAt: timestamp("window_started_at", { withTimezone: true }).notNull().defaultNow(),
   count: integer("count").notNull(),
-});
+}, (table) => [
+  index("enquiry_quota_window_started_at_idx").on(table.windowStartedAt),
+]);
