@@ -68,11 +68,14 @@ const isValidTab = (value: string): value is CalculatorId =>
 /** Keep calculator tabs, URL hashes and anonymous tab-view analytics in sync. */
 export default function CalculatorPage() {
   const [active, setActive] = useState<CalculatorId>("kitchen");
+  const [hashReady, setHashReady] = useState(false);
 
   useEffect(() => {
+    /** Apply supported deep links before enabling the initial analytics event. */
     const applyHash = () => {
       const fromHash = window.location.hash.replace("#", "");
       if (isValidTab(fromHash)) setActive(fromHash);
+      setHashReady(true);
     };
 
     const frame = window.requestAnimationFrame(applyHash);
@@ -84,12 +87,12 @@ export default function CalculatorPage() {
   }, []);
 
   useEffect(() => {
-    if (!process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN) return;
+    if (!hashReady || !process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN) return;
     posthog.capture("calculator_tab_viewed", {
       calculator: active,
       page_path: "/price-calculator",
     });
-  }, [active]);
+  }, [active, hashReady]);
 
   const selectTab = (id: CalculatorId) => {
     setActive(id);

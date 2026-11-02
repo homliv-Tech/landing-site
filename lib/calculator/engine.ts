@@ -12,6 +12,7 @@ import {
   ROOM_RATES,
   findBhkOption,
   findBhkVariant,
+  getHomeBedroomCount,
 } from "./config";
 import type {
   BedroomInput,
@@ -151,11 +152,11 @@ export function calculateFullHome(input: FullHomeInput): Estimate {
   const bhk = findBhkOption(input.bhkId);
   const variant = findBhkVariant(bhk, input.variantId);
   const pkg = getPackage(input.packageId);
-  const bhkCount = Number.parseInt(bhk.id, 10) || 1;
+  const bedroomCount = getHomeBedroomCount(bhk.id, input.bedroomCount);
   const area = clamp(input.area, variant.minArea, variant.maxArea);
 
   const roomLines = ROOMS.flatMap((room) => {
-    const max = room.maxForBhk(bhkCount);
+    const max = room.maxForBhk(bedroomCount);
     const count = clamp(Math.round(input.rooms[room.id] ?? 0), 0, max);
     if (count === 0) return [];
     const rate = ROOM_RATES[room.id][input.packageId];
@@ -191,7 +192,7 @@ export function calculateFullHome(input: FullHomeInput): Estimate {
     total: lines.reduce((total, line) => total + line.amount, 0),
     lines,
     notes: [
-      `${pkg.name} package for a ${bhk.label} ${variant.label.toLowerCase()} home.`,
+      `${pkg.name} package for a ${bhk.label} ${variant.label.toLowerCase()} home${bhk.id === "5" ? ` with ${bedroomCount} bedrooms` : ""}.`,
       `${Object.values(input.rooms).reduce((total, count) => total + count, 0)} rooms included in this estimate.`,
       "Furniture, appliances, painting and civil work are priced separately.",
       "Final quote follows a site visit and detailed measurements.",

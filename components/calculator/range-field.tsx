@@ -32,6 +32,7 @@ export default function RangeField({
   hint,
   onChange,
 }: RangeFieldProps) {
+  /** Parse an edited measurement and retain the prior value when input is invalid. */
   const commit = (raw: string) => {
     const parsed = Number.parseInt(raw, 10);
     const next = clamp(Number.isFinite(parsed) ? parsed : value, min, max);

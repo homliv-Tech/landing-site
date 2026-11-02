@@ -365,6 +365,20 @@
   border: 0;
 }
 
+.calc-bedroom-count {
+  display: grid;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.calc-bedroom-count-input {
+  width: 100%;
+  max-width: 12rem;
+  min-height: 44px;
+  padding: 10px 14px;
+  background: var(--paper);
+}
+
 .calc-choice-grid {
   display: grid;
   gap: 14px;

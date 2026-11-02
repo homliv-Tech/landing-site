@@ -95,6 +95,7 @@ export default function KitchenCalculator() {
     setStep((current) => Math.min(steps.length - 1, current + 1));
   };
 
+  /** Clear selections and return to the layout step using the visitor's motion preference. */
   const reset = () => {
     setStep(0);
     setLayoutId("l-shaped");

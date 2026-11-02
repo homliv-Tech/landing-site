@@ -93,6 +93,7 @@ export default function BedroomCalculator() {
     setStep((current) => Math.min(steps.length - 1, current + 1));
   };
 
+  /** Restore the unstarted state and scroll back without overriding reduced-motion settings. */
   const reset = () => {
     setStep(0);
     setTypeId("master");

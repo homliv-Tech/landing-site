@@ -75,7 +75,8 @@ export type RoomDefinition = {
   id: RoomId;
   name: string;
   description: string;
-  maxForBhk: (bhk: number) => number;
+  /** Limits the design scope using the home's actual number of bedrooms. */
+  maxForBhk: (bedroomCount: number) => number;
 };
 
 export type BhkVariant = {
@@ -110,6 +111,8 @@ export type BedroomInput = {
 
 export type FullHomeInput = {
   bhkId: string;
+  /** Actual bedrooms for the open-ended 5 BHK+ category; defaults to five. */
+  bedroomCount?: number;
   variantId: string;
   area: number;
   rooms: Record<RoomId, number>;
