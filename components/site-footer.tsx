@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+/** Render shared footer navigation with readable contrast on its dark surface. */
 export default function SiteFooter() {
   return (
     <footer>

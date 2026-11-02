@@ -14,6 +14,7 @@ type BudgetSummaryProps = {
   isReady?: boolean;
 };
 
+/** Show ₹0 until a real selection, then one indicative total with its itemized scope. */
 export default function BudgetSummary({
   estimate,
   subtitle,

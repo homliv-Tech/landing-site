@@ -17,6 +17,7 @@ const links: { id: CurrentPage | "contact"; label: string; href: string }[] = [
   { id: "contact", label: "Contact", href: "/#contact" },
 ];
 
+/** Share desktop/mobile navigation and enquiry tracking across the site's pages. */
 export default function SiteHeader({
   current,
   variant = "overlay",

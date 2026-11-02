@@ -19,7 +19,7 @@
   --beige-light: #f1eee7;
   --beige-dark: #d6d0c4;
   --muted: #5f665f;
-  --muted-light: #7a8078;
+  --muted-light: #5f665f;
   --card: #e7e2d8;
   --card-foreground: #292f2b;
   --popover: #fffdf8;
@@ -137,11 +137,18 @@ textarea {
   font: inherit;
 }
 
-.header a:focus-visible,
-.header button:focus-visible,
 .mobile-menu summary:focus-visible,
 a:focus-visible,
 button:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: 4px;
+}
+
+.header a:focus-visible,
+.header button:focus-visible,
+.header .mobile-menu summary:focus-visible,
+footer a:focus-visible,
+footer button:focus-visible {
   outline: 2px solid var(--mint);
   outline-offset: 4px;
 }

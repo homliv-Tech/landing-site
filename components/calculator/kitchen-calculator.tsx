@@ -55,6 +55,7 @@ const steps: CalculatorStep[] = [
 
 const initialLayout = KITCHEN_LAYOUTS[0];
 
+/** Manage the kitchen steps and reveal estimates only after the first real selection. */
 export default function KitchenCalculator() {
   const [step, setStep] = useState(0);
   const [layoutId, setLayoutId] = useState<KitchenLayoutId>("l-shaped");

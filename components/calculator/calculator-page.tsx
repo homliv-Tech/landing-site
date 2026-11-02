@@ -61,9 +61,11 @@ const faqs = [
   },
 ];
 
+/** Accept only known calculator IDs from the URL hash or tab control. */
 const isValidTab = (value: string): value is CalculatorId =>
   tabs.some((tab) => tab.id === value);
 
+/** Keep calculator tabs, URL hashes and anonymous tab-view analytics in sync. */
 export default function CalculatorPage() {
   const [active, setActive] = useState<CalculatorId>("kitchen");
 
@@ -119,8 +121,8 @@ export default function CalculatorPage() {
           <div className="pricing-hero-copy">
             <p>
               A directional estimate for your kitchen, bedroom or full home in
-              minutes. Choose a calculator, share a few details and see the
-              range before you commit.
+              minutes. Choose a calculator, share a few details and see an
+              estimate before you commit.
             </p>
             <span className="pricing-hero-note">
               Indicative pricing · No sign-up required
@@ -203,7 +205,7 @@ export default function CalculatorPage() {
             </article>
             <article>
               <span>03</span>
-              <h3>See your range</h3>
+              <h3>See your estimate</h3>
               <p>
                 Your estimate updates as you choose. Share it with our team for
                 a site-specific quote.

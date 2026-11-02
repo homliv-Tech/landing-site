@@ -26,6 +26,7 @@ type RoomCounterListProps = {
   onChange: (room: RoomId, count: number) => void;
 };
 
+/** Adjust each room count between zero and its BHK-specific maximum. */
 export default function RoomCounterList({
   rooms,
   counts,

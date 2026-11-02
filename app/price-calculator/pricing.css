@@ -349,7 +349,7 @@
 .calc-tab:focus-visible,
 .calc-stepper-button:focus-visible,
 .calc-summary-reset:focus-visible {
-  outline: 2px solid var(--mint);
+  outline: 2px solid var(--forest);
   outline-offset: 3px;
 }
 

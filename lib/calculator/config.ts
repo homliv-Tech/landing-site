@@ -252,6 +252,7 @@ export const BEDROOM_ADD_ON_MULTIPLIERS: Record<PackageId, number> = {
   custom: 1.5,
 };
 
+/** Create a room-limit rule whose maximum does not depend on BHK count. */
 const roomMax = (value: number) => () => value;
 
 export const ROOMS: RoomDefinition[] = [
@@ -336,6 +337,7 @@ export const BHK_OPTIONS: BhkOption[] = [
   },
 ];
 
+/** Seed each run of a kitchen layout with its configured default length in feet. */
 export function defaultKitchenMeasurements(
   layout: KitchenLayoutDefinition,
 ): Record<string, number> {
@@ -344,6 +346,7 @@ export function defaultKitchenMeasurements(
   );
 }
 
+/** Seed a whole-home scope with one shared space and one bedroom/bathroom per BHK. */
 export function defaultRoomsForBhk(bhk: number): Record<RoomId, number> {
   return {
     living: 1,
@@ -354,10 +357,12 @@ export function defaultRoomsForBhk(bhk: number): Record<RoomId, number> {
   };
 }
 
+/** Resolve a BHK ID, using the second configured option when it is unknown. */
 export function findBhkOption(bhkId: string): BhkOption {
   return BHK_OPTIONS.find((option) => option.id === bhkId) ?? BHK_OPTIONS[1];
 }
 
+/** Resolve a home-size variant within a BHK, falling back to its first variant. */
 export function findBhkVariant(bhk: BhkOption, variantId: string) {
   return bhk.variants.find((variant) => variant.id === variantId) ?? bhk.variants[0];
 }

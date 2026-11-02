@@ -51,6 +51,7 @@ const steps: CalculatorStep[] = [
 const defaultBhk = findBhkOption("2");
 const defaultVariant = findBhkVariant(defaultBhk, "small");
 
+/** Coordinate BHK, floor area, bounded room counts and package selections. */
 export default function FullHomeCalculator() {
   const [step, setStep] = useState(0);
   const [bhkId, setBhkId] = useState(defaultBhk.id);
