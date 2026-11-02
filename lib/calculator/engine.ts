@@ -30,32 +30,40 @@ const inr = new Intl.NumberFormat("en-IN", {
   maximumFractionDigits: 0,
 });
 
+/** Constrain a measurement or multiplier to its supported interval. */
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
 
+/** Round an indicative amount to the nearest pricing increment. */
 const roundTo = (value: number, nearest = 500) =>
   Math.round(value / nearest) * nearest;
 
+/** Format a whole-rupee amount using Indian digit grouping. */
 export function formatINR(value: number): string {
   return inr.format(Math.round(value));
 }
 
+/** Find a package, falling back to Premium for an unknown ID. */
 export function getPackage(id: PackageId) {
   return PACKAGES.find((item) => item.id === id) ?? PACKAGES[1];
 }
 
+/** Find a layout, falling back to the configured first layout. */
 export function getKitchenLayout(id: KitchenLayoutId) {
   return KITCHEN_LAYOUTS.find((item) => item.id === id) ?? KITCHEN_LAYOUTS[0];
 }
 
+/** Find a bedroom type or use the first configured bedroom. */
 export function getBedroomType(id: BedroomTypeId) {
   return BEDROOM_TYPES.find((item) => item.id === id) ?? BEDROOM_TYPES[0];
 }
 
+/** Find a bedroom scope or use the first configured scope. */
 export function getBedroomScope(id: BedroomScopeId) {
   return BEDROOM_SCOPES.find((item) => item.id === id) ?? BEDROOM_SCOPES[0];
 }
 
+/** Sum only the runs used by the layout, applying defaults and measurement limits. */
 export function getKitchenRunFeet(
   layoutId: KitchenLayoutId,
   measurements: Partial<Record<"A" | "B" | "C", number>>,
@@ -67,6 +75,7 @@ export function getKitchenRunFeet(
   }, 0);
 }
 
+/** Price kitchen cabinetry by running feet and add the selected appliances/services. */
 export function calculateKitchen(input: KitchenInput): Estimate {
   const layout = getKitchenLayout(input.layoutId);
   const pkg = getPackage(input.packageId);
@@ -101,6 +110,7 @@ export function calculateKitchen(input: KitchenInput): Estimate {
   };
 }
 
+/** Price the wardrobe front area and scope additions using the chosen package rates. */
 export function calculateBedroom(input: BedroomInput): Estimate {
   const type = getBedroomType(input.typeId);
   const scope = getBedroomScope(input.scopeId);
@@ -136,6 +146,7 @@ export function calculateBedroom(input: BedroomInput): Estimate {
   };
 }
 
+/** Total selected room packages with bounded room counts and a home-size adjustment. */
 export function calculateFullHome(input: FullHomeInput): Estimate {
   const bhk = findBhkOption(input.bhkId);
   const variant = findBhkVariant(bhk, input.variantId);

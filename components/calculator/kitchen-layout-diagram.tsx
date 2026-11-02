@@ -20,6 +20,7 @@ const labelPositions: Record<
   ],
 };
 
+/** Draw the sink fixture at a kitchen-diagram coordinate. */
 function Sink({ x, y }: { x: number; y: number }) {
   return (
     <g>
@@ -29,6 +30,7 @@ function Sink({ x, y }: { x: number; y: number }) {
   );
 }
 
+/** Position hob burners horizontally or vertically to suit the kitchen run. */
 function Hob({ x, y, vertical = false }: { x: number; y: number; vertical?: boolean }) {
   const offsets = vertical
     ? [
@@ -52,6 +54,7 @@ function Hob({ x, y, vertical = false }: { x: number; y: number; vertical?: bool
   );
 }
 
+/** Illustrate the selected counter arrangement with optional measurement labels. */
 export default function KitchenLayoutDiagram({
   layout,
   showLabels = false,

@@ -12,6 +12,7 @@ type ChoiceCardProps = {
   className?: string;
 };
 
+/** Present a labelled radio choice with optional explanatory text and illustration. */
 export default function ChoiceCard({
   value,
   checked,

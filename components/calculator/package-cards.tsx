@@ -13,6 +13,7 @@ type PackageCardsProps = {
   onChange: (value: PackageId) => void;
 };
 
+/** Present package choices with calculator-specific imagery and finish inclusions. */
 export default function PackageCards({
   calculator,
   media,

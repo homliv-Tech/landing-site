@@ -60,6 +60,7 @@ type Phase = "intro" | "reveal" | "done";
 
 /* ── component ───────────────────────────────────────────────── */
 
+/** Cycle greetings before a curtain reveal, respecting reduced motion and session replay limits. */
 export const TextPreloader = ({
   greetings = DEFAULT_GREETINGS,
   greetingHold = 720,

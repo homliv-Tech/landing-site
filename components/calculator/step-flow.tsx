@@ -25,6 +25,7 @@ type StepFlowProps = {
   ctaLocation: string;
 };
 
+/** Render accessible progress and navigation, scrolling obscured steps below sticky tabs. */
 export default function StepFlow({
   steps,
   current,

@@ -57,6 +57,7 @@ const steps: CalculatorStep[] = [
 
 const initialType = BEDROOM_TYPES[0];
 
+/** Manage bedroom defaults, wardrobe measurements and scope with a resettable estimate. */
 export default function BedroomCalculator() {
   const [step, setStep] = useState(0);
   const [typeId, setTypeId] = useState<BedroomTypeId>("master");
@@ -231,6 +232,7 @@ export default function BedroomCalculator() {
   );
 }
 
+/** Illustrate the wardrobe proportions for the chosen width and height. */
 function WardrobeDiagram({ width, height }: { width: number; height: number }) {
   const maxWidth = 14;
   const maxHeight = 12;

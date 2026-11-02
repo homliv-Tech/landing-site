@@ -16,6 +16,7 @@ type BhkSelectorProps = {
   onChange: (value: BhkSelection) => void;
 };
 
+/** Select a BHK and reveal its home-size variants when multiple sizes are available. */
 export default function BhkSelector({ value, onChange }: BhkSelectorProps) {
   return (
     <RadioGroup

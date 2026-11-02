@@ -20,6 +20,7 @@ type MeasurementFieldsProps = {
   onChange: (key: MeasurementKey, value: number) => void;
 };
 
+/** Render only the kitchen runs required by the current layout, with bounded inputs. */
 export default function MeasurementFields({
   layout,
   values,

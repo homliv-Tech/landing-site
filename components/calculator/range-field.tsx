@@ -16,9 +16,11 @@ type RangeFieldProps = {
   onChange: (value: number) => void;
 };
 
+/** Keep numeric input edits within the field's measurement limits. */
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
 
+/** Link a single-value slider and numeric input; commit bounded edits on blur. */
 export default function RangeField({
   id,
   label,
