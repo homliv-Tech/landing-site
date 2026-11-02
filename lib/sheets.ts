@@ -1,25 +1,68 @@
-import { inArray, isNull } from "drizzle-orm";
+import { and, eq, inArray, isNull } from "drizzle-orm";
 import { JWT } from "google-auth-library";
 import { getDb } from "./db";
 import { enquiries } from "./schema";
+import { getSheetsConfig, hasSheetsCredentials } from "./sheets-config";
+import { toEnquirySheetRow } from "./sheets-row";
 
-/** An interrupted append may result in a duplicate; the enquiry ID identifies it. */
-export async function backupEnquiries() {
-  const { GOOGLE_SERVICE_ACCOUNT_EMAIL, GOOGLE_PRIVATE_KEY, GOOGLE_SHEETS_SPREADSHEET_ID } = process.env;
-  if (!GOOGLE_SERVICE_ACCOUNT_EMAIL || !GOOGLE_PRIVATE_KEY || !GOOGLE_SHEETS_SPREADSHEET_ID) {
+export { hasSheetsCredentials };
+
+/** Pass an ID after an insert, or omit it to retry a batch of pending rows. */
+export async function backupEnquiries(enquiryId?: string) {
+  const config = getSheetsConfig();
+  if (!config) {
     throw new Error("Google Sheets credentials are not configured");
   }
-  const auth = new JWT({ email: GOOGLE_SERVICE_ACCOUNT_EMAIL, key: GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"), scopes: ["https://www.googleapis.com/auth/spreadsheets"] });
+  const auth = new JWT({
+    email: config.serviceAccountEmail,
+    key: config.privateKey,
+    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+  });
   return getDb().transaction(async (tx) => {
-    const rows = await tx.select().from(enquiries).where(isNull(enquiries.sheetsBackedUpAt))
-      .orderBy(enquiries.createdAt).limit(50).for("update", { skipLocked: true });
+    // Row locks coordinate the immediate append and retry job for the same ID.
+    const rows = await tx
+      .select()
+      .from(enquiries)
+      .where(
+        and(
+          isNull(enquiries.sheetsBackedUpAt),
+          enquiryId ? eq(enquiries.id, enquiryId) : undefined,
+        ),
+      )
+      .orderBy(enquiries.createdAt)
+      .limit(enquiryId ? 1 : 50)
+      .for("update", { skipLocked: true });
     if (!rows.length) return 0;
-    const tab = (process.env.GOOGLE_SHEETS_TAB || "Enquiries").replace(/'/g, "''");
-    const range = encodeURIComponent(`'${tab}'!A:F`);
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(GOOGLE_SHEETS_SPREADSHEET_ID)}/values/${range}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`;
-    const response = await auth.request({ url, method: "POST", data: { values: rows.map((row) => [row.id, row.createdAt.toISOString(), row.name, row.email, row.phone ?? "", row.message]) }, timeout: 10000 });
-    if (response.status !== 200) throw new Error(`Sheets returned ${response.status}`);
-    await tx.update(enquiries).set({ sheetsBackedUpAt: new Date() }).where(inArray(enquiries.id, rows.map((row) => row.id)));
+    const tab = config.tab.replace(/'/g, "''");
+    const range = encodeURIComponent(`'${tab}'!A:J`);
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(config.spreadsheetId)}/values/${range}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`;
+    const response = await auth.request<{ updates?: { updatedRows?: number } }>(
+      {
+        url,
+        method: "POST",
+        data: {
+          values: rows.map(toEnquirySheetRow),
+        },
+        timeout: 10000,
+      },
+    );
+    if (
+      response.status !== 200 ||
+      response.data.updates?.updatedRows !== rows.length
+    ) {
+      throw new Error(
+        "Google Sheets did not confirm every appended enquiry. Backup is pending.",
+      );
+    }
+    await tx
+      .update(enquiries)
+      .set({ sheetsBackedUpAt: new Date() })
+      .where(
+        inArray(
+          enquiries.id,
+          rows.map((row) => row.id),
+        ),
+      );
     return rows.length;
   });
 }
