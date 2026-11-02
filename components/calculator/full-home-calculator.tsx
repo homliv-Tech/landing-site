@@ -7,12 +7,15 @@ import PackageCards from "@/components/calculator/package-cards";
 import RangeField from "@/components/calculator/range-field";
 import RoomCounterList from "@/components/calculator/room-counter-list";
 import StepFlow, { type CalculatorStep } from "@/components/calculator/step-flow";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   PACKAGE_MEDIA,
   ROOMS,
   defaultRoomsForBhk,
   findBhkOption,
   findBhkVariant,
+  getHomeBedroomCount,
 } from "@/lib/calculator/config";
 import { calculateFullHome, getPackage } from "@/lib/calculator/engine";
 import type { PackageId, RoomId } from "@/lib/calculator/types";
@@ -55,6 +58,7 @@ const defaultVariant = findBhkVariant(defaultBhk, "small");
 export default function FullHomeCalculator() {
   const [step, setStep] = useState(0);
   const [bhkId, setBhkId] = useState(defaultBhk.id);
+  const [bedroomCount, setBedroomCount] = useState(2);
   const [variantId, setVariantId] = useState(defaultVariant.id);
   const [area, setArea] = useState(defaultVariant.area);
   const [rooms, setRooms] = useState<Record<RoomId, number>>(() =>
@@ -65,10 +69,10 @@ export default function FullHomeCalculator() {
 
   const bhkOption = findBhkOption(bhkId);
   const variant = findBhkVariant(bhkOption, variantId);
-  const bhkCount = Number.parseInt(bhkOption.id, 10) || 1;
+  const actualBedroomCount = getHomeBedroomCount(bhkOption.id, bedroomCount);
   const pkg = getPackage(packageId);
   const maxes = Object.fromEntries(
-    ROOMS.map((room) => [room.id, room.maxForBhk(bhkCount)]),
+    ROOMS.map((room) => [room.id, room.maxForBhk(actualBedroomCount)]),
   ) as Record<RoomId, number>;
   const totalRooms = Object.values(rooms).reduce(
     (total, count) => total + count,
@@ -77,21 +81,43 @@ export default function FullHomeCalculator() {
   const isEstimateReady = hasStarted && totalRooms > 0;
   const estimate = calculateFullHome({
     bhkId,
+    bedroomCount: actualBedroomCount,
     variantId,
     area,
     rooms,
     packageId,
   });
 
+  /** Seed the selected category while retaining its actual bedroom count on variant changes. */
   const selectBhk = (next: { bhkId: string; variantId: string }) => {
     const nextOption = findBhkOption(next.bhkId);
     const nextVariant = findBhkVariant(nextOption, next.variantId);
-    const nextCount = Number.parseInt(nextOption.id, 10) || 1;
+    const nextCount = getHomeBedroomCount(
+      nextOption.id,
+      nextOption.id === bhkId ? bedroomCount : undefined,
+    );
     setHasStarted(true);
     setBhkId(nextOption.id);
+    setBedroomCount(nextCount);
     setVariantId(nextVariant.id);
     setArea(nextVariant.area);
     setRooms(defaultRoomsForBhk(nextCount));
+  };
+
+  /** Update 5 BHK+ room limits, preserving any deliberate reductions to the design scope. */
+  const updateBedroomCount = (raw: string) => {
+    const nextCount = getHomeBedroomCount(bhkId, Number(raw));
+    if (nextCount === actualBedroomCount) return nextCount;
+    setHasStarted(true);
+    setBedroomCount(nextCount);
+    setRooms((current) => ({
+      ...current,
+      bedroom: current.bedroom === actualBedroomCount
+        ? nextCount : Math.min(current.bedroom, nextCount),
+      bathroom: current.bathroom === actualBedroomCount
+        ? nextCount : Math.min(current.bathroom, nextCount + 1),
+    }));
+    return nextCount;
   };
 
   const updateRoom = (room: RoomId, count: number) => {
@@ -106,9 +132,11 @@ export default function FullHomeCalculator() {
     setStep((current) => Math.min(steps.length - 1, current + 1));
   };
 
+  /** Restore the unstarted 2 BHK defaults and return to the calculator using reduced-motion settings. */
   const reset = () => {
     setStep(0);
     setBhkId(defaultBhk.id);
+    setBedroomCount(2);
     setVariantId(defaultVariant.id);
     setArea(defaultVariant.area);
     setRooms(defaultRoomsForBhk(2));
@@ -134,10 +162,42 @@ export default function FullHomeCalculator() {
         ctaLocation="price_calculator_full_home"
       >
         {step === 0 ? (
-          <BhkSelector
-            value={hasStarted ? { bhkId, variantId } : { bhkId: "", variantId: "" }}
-            onChange={selectBhk}
-          />
+          <div>
+            <BhkSelector
+              value={hasStarted ? { bhkId, variantId } : { bhkId: "", variantId: "" }}
+              onChange={selectBhk}
+            />
+            {hasStarted && bhkOption.id === "5" ? (
+              <div className="calc-bedroom-count">
+                <Label htmlFor="home-bedroom-count">
+                  How many bedrooms does your home have?
+                </Label>
+                <Input
+                  key={`bedrooms-${actualBedroomCount}`}
+                  id="home-bedroom-count"
+                  className="calc-bedroom-count-input"
+                  type="number"
+                  inputMode="numeric"
+                  min={5}
+                  step={1}
+                  defaultValue={actualBedroomCount}
+                  aria-describedby="home-bedroom-count-hint"
+                  onBlur={(event) => {
+                    event.currentTarget.value = String(
+                      updateBedroomCount(event.currentTarget.value),
+                    );
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") event.currentTarget.blur();
+                  }}
+                />
+                <p id="home-bedroom-count-hint" className="calc-hint">
+                  For 5 BHK+ homes, enter the actual number so every bedroom can
+                  be included in your estimate.
+                </p>
+              </div>
+            ) : null}
+          </div>
         ) : null}
 
         {step === 1 ? (
@@ -174,7 +234,7 @@ export default function FullHomeCalculator() {
             />
             <p className="calc-hint">
               {totalRooms} {totalRooms === 1 ? "room" : "rooms"} selected. Bedroom
-              and bathroom counts are capped to suit a {bhkOption.label} home.
+              and bathroom limits use your home’s {actualBedroomCount} bedrooms.
             </p>
             {totalRooms === 0 ? (
               <p className="calc-error" role="status">
@@ -206,7 +266,7 @@ export default function FullHomeCalculator() {
 
       <BudgetSummary
         estimate={estimate}
-        subtitle={`${bhkOption.label} ${variant.label.toLowerCase()} · ${area.toLocaleString("en-IN")} sq ft · ${totalRooms} rooms · ${pkg.name}`}
+        subtitle={`${bhkOption.label}${bhkOption.id === "5" ? ` (${actualBedroomCount} bedrooms)` : ""} ${variant.label.toLowerCase()} · ${area.toLocaleString("en-IN")} sq ft · ${totalRooms} rooms · ${pkg.name}`}
         ctaLocation="price_calculator_full_home"
         onReset={reset}
         isReady={isEstimateReady}

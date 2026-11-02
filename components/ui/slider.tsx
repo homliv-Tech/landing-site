@@ -10,12 +10,10 @@ function Slider({
   max = 100,
   ...props
 }: SliderPrimitive.Root.Props) {
-  const currentValue = value ?? defaultValue
+  const currentValue = value ?? defaultValue ?? min
   const thumbCount = Array.isArray(currentValue)
     ? currentValue.length
-    : typeof currentValue === "number"
-      ? 1
-      : 2
+    : 1
 
   return (
     <SliderPrimitive.Root

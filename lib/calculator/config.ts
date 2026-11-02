@@ -272,13 +272,13 @@ export const ROOMS: RoomDefinition[] = [
     id: "bedroom",
     name: "Bedroom",
     description: "Wardrobe and bedroom storage",
-    maxForBhk: (bhk) => bhk,
+    maxForBhk: (bedroomCount) => bedroomCount,
   },
   {
     id: "bathroom",
     name: "Bathroom",
     description: "Vanity, mirror and storage",
-    maxForBhk: (bhk) => bhk + 1,
+    maxForBhk: (bedroomCount) => bedroomCount + 1,
   },
   {
     id: "dining",
@@ -360,6 +360,22 @@ export function defaultRoomsForBhk(bhk: number): Record<RoomId, number> {
 /** Resolve a BHK ID, using the second configured option when it is unknown. */
 export function findBhkOption(bhkId: string): BhkOption {
   return BHK_OPTIONS.find((option) => option.id === bhkId) ?? BHK_OPTIONS[1];
+}
+
+/** Use an entered bedroom count for 5 BHK+; smaller categories retain their fixed count. */
+export function getHomeBedroomCount(
+  bhkId: string,
+  actualBedroomCount?: number,
+): number {
+  const option = findBhkOption(bhkId);
+  const categoryCount = Number.parseInt(option.id, 10) || 1;
+  if (option.id !== "5") return categoryCount;
+
+  return typeof actualBedroomCount === "number" &&
+    Number.isSafeInteger(actualBedroomCount) &&
+    actualBedroomCount >= categoryCount
+    ? actualBedroomCount
+    : categoryCount;
 }
 
 /** Resolve a home-size variant within a BHK, falling back to its first variant. */

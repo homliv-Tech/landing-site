@@ -9,9 +9,21 @@ test.each([
   ["default scalar", { defaultValue: 40 }, 1],
   ["controlled range", { value: [20, 80] }, 2],
   ["default range", { defaultValue: [20, 80] }, 2],
-  ["controlled scalar overrides a default range", { value: 40, defaultValue: [20, 80] }, 1],
-  ["range fallback", {}, 2],
-])("%s renders the correct number of slider thumbs", (_name, props, expected) => {
-  const html = renderToStaticMarkup(createElement(Slider, { ...props, "aria-label": "Measurement" }));
-  expect([...html.matchAll(/data-slot="slider-thumb"/g)]).toHaveLength(expected);
-});
+  [
+    "controlled scalar overrides a default range",
+    { value: 40, defaultValue: [20, 80] },
+    1,
+  ],
+  ["default minimum", {}, 1],
+  ["custom minimum", { min: 25 }, 1],
+])(
+  "%s renders the correct number of slider thumbs",
+  (_name, props, expected) => {
+    const html = renderToStaticMarkup(
+      createElement(Slider, { ...props, "aria-label": "Measurement" }),
+    );
+    expect([...html.matchAll(/data-slot="slider-thumb"/g)]).toHaveLength(
+      expected,
+    );
+  },
+);
