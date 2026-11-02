@@ -11,7 +11,7 @@ const inspirations = [
 
 export default function Home() {
   return (
-    <TextPreloader storageKey="homliv-intro" greetings={[{text:"Welcome"},{text:"To a better way"},{text:"To feel at home"},{text:"homliv"}]} greetingHold={550} revealDuration={1100} introClassName="preloader-intro" greetingClassName="preloader-text">
+    <TextPreloader storageKey="homliv-intro" greetings={[{text:"Welcome"},{text:"To a better way"},{text:"To feel at home"},{text:"Homliv, Make Your Home Livly "}]} greetingHold={850} revealDuration={1500} introClassName="preloader-intro" greetingClassName="preloader-text">
       <main id="home">
         <SiteHeader current="home" enquiryLocation="header" />
 
