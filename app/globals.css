@@ -104,6 +104,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 105px;
 }
 
 body {
@@ -166,7 +167,7 @@ footer button:focus-visible {
 
 .header {
   height: 105px;
-  position: absolute;
+  position: sticky;
   top: 0;
   left: 0;
   width: 100%;
@@ -177,11 +178,15 @@ footer button:focus-visible {
   padding: 0 5%;
   background: var(--forest);
   color: var(--ivory);
+  transition: background-color 0.2s ease;
 }
 
-.header--solid,
-.team-header {
-  position: relative;
+.header--overlay {
+  position: fixed;
+  background: transparent;
+}
+
+.header--overlay.header--scrolled {
   background: var(--forest);
 }
 
@@ -752,6 +757,10 @@ footer {
 }
 
 @media (max-width: 700px) {
+  html {
+    scroll-padding-top: 80px;
+  }
+
   .header {
     height: 80px;
     padding: 0 6%;

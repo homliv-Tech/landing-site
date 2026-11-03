@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 type CurrentPage = "home" | "pricing" | "team";
 
@@ -23,8 +26,18 @@ export default function SiteHeader({
   variant = "overlay",
   enquiryLocation = "header",
 }: SiteHeaderProps) {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    if (variant !== "overlay") return;
+    const update = () => setScrolled(window.scrollY > 20);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, [variant]);
+
   return (
-    <header className={variant === "solid" ? "header header--solid" : "header"}>
+    <header className={`header ${variant === "solid" ? "header--solid" : "header--overlay"}${scrolled ? " header--scrolled" : ""}`}>
       <Link href="/" className="brand" aria-label="Homliv home">
         <img src="/homliv-logo.svg" alt="Homliv" />
       </Link>
