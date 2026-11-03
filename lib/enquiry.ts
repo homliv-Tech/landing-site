@@ -42,8 +42,8 @@ export const enquirySchema = z.object({
   message: z
     .string({ error: "Tell us about your requirements." })
     .trim()
-    .min(1, "Tell us about your requirements.")
-    .max(5000, "Keep your requirements under 5,000 characters."),
+    .max(5000, "Keep your requirements under 5,000 characters.")
+    .default(""),
 });
 
 export type EnquiryFormValues = z.input<typeof enquirySchema>;

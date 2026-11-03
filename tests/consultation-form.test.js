@@ -53,7 +53,7 @@ test("an empty form displays all errors, focuses the first field, and sends no r
   await screen.findByText("Enter your full name.");
 
   expect(document.querySelectorAll('[data-slot="form-message"]')).toHaveLength(
-    7,
+    6,
   );
   expect(document.activeElement).toBe(screen.getByLabelText(/^Full name/));
   const email = screen.getByLabelText(/^Email address/);
@@ -91,10 +91,13 @@ test("closing an empty dropdown shows its required-field message", async () => {
   expect(apartment.getAttribute("aria-invalid")).toBe("true");
 });
 
-test("selects submit their values and successful submission resets the form", async () => {
+test("a form with optional requirements left blank submits and resets successfully", async () => {
   const user = userEvent.setup();
   render(createElement(ConsultationForm));
   await fillForm(user);
+  const requirements = screen.getByLabelText(/^Tell us about your requirements/);
+  expect(requirements.required).toBe(false);
+  await user.clear(requirements);
   await user.click(
     screen.getByRole("button", { name: "Book free consultation" }),
   );
@@ -105,6 +108,7 @@ test("selects submit their values and successful submission resets the form", as
     apartmentType: "2-bhk",
     budget: "10-20-lakh",
     email: "test@example.com",
+    message: "",
   });
 
   await user.click(

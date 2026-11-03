@@ -29,7 +29,7 @@ test("Zod normalizes valid enquiry values and strips unknown fields", () => {
   expect("companyWebsite" in result.data).toBe(false);
 });
 
-test("Zod rejects every empty visible field", () => {
+test("Zod rejects empty required fields", () => {
   const result = enquirySchema.safeParse({
     name: "",
     email: "",
@@ -49,8 +49,16 @@ test("Zod rejects every empty visible field", () => {
     address: "Enter your apartment address.",
     apartmentType: "Select your apartment type.",
     budget: "Select your budget range.",
-    message: "Tell us about your requirements.",
   });
+});
+
+test.each(["", "   ", undefined])("Zod accepts blank or omitted requirements (%s)", (message) => {
+  const result = enquirySchema.parse({ ...validEnquiry, message });
+  expect(result.message).toBe("");
+});
+
+test.each([42, null, "a".repeat(5001)])("Zod rejects invalid or oversized requirements", (message) => {
+  expect(enquirySchema.safeParse({ ...validEnquiry, message }).success).toBe(false);
 });
 
 test("Zod returns the form's field-level validation messages", () => {
