@@ -94,3 +94,84 @@ test("a 5 BHK+ user can enter six bedrooms and include the sixth room", async ()
     bedroom.querySelector('button[aria-label="Add one bedroom"]').disabled,
   ).toBe(true);
 });
+
+async function openLargeHome() {
+  await act(async () => root.render(createElement(FullHomeCalculator)));
+  const choice = [...container.querySelectorAll("label")].find((label) =>
+    label.textContent.includes("5 BHK+"),
+  );
+  await act(async () => choice.click());
+}
+
+async function editBedroomCount(raw) {
+  const count = document.getElementById("home-bedroom-count");
+  await act(async () => {
+    count.focus();
+    count.value = raw;
+    count.blur();
+  });
+}
+
+async function navigateSteps(direction, steps) {
+  for (let index = 0; index < steps; index++) {
+    const button = [...container.querySelectorAll("button")].find(
+      (item) => item.textContent.trim() === direction,
+    );
+    await act(async () => button.click());
+  }
+}
+
+function bathroomScope() {
+  return [...container.querySelectorAll(".calc-room")].find(
+    (room) => room.querySelector(".calc-room-name").textContent === "Bathroom",
+  );
+}
+
+test("empty or invalid bedroom edits preserve the previous count and estimate", async () => {
+  await openLargeHome();
+  await editBedroomCount("6");
+  const estimate = container.querySelector(".calc-summary-total").textContent;
+
+  for (const raw of ["", " ", "4", "6.5", "invalid"]) {
+    await editBedroomCount(raw);
+    expect(document.getElementById("home-bedroom-count").value).toBe("6");
+    expect(container.querySelector(".calc-summary-total").textContent).toBe(
+      estimate,
+    );
+    expect(
+      container.querySelector(".calc-summary-subtitle").textContent,
+    ).toContain("6 bedrooms");
+  }
+});
+
+test("a fully selected bathroom scope grows from six to seven with an extra bedroom", async () => {
+  await openLargeHome();
+  await navigateSteps("Continue", 2);
+  await act(async () =>
+    bathroomScope()
+      .querySelector('button[aria-label="Add one bathroom"]')
+      .click(),
+  );
+  expect(bathroomScope().querySelector("output").textContent).toBe("6");
+
+  await navigateSteps("Back", 2);
+  await editBedroomCount("6");
+  await navigateSteps("Continue", 2);
+  expect(bathroomScope().querySelector("output").textContent).toBe("7");
+});
+
+test("a deliberately reduced bathroom scope stays reduced when bedrooms increase", async () => {
+  await openLargeHome();
+  await navigateSteps("Continue", 2);
+  await act(async () =>
+    bathroomScope()
+      .querySelector('button[aria-label="Remove one bathroom"]')
+      .click(),
+  );
+  expect(bathroomScope().querySelector("output").textContent).toBe("4");
+
+  await navigateSteps("Back", 2);
+  await editBedroomCount("6");
+  await navigateSteps("Continue", 2);
+  expect(bathroomScope().querySelector("output").textContent).toBe("4");
+});

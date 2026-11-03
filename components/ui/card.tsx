@@ -1,6 +1,7 @@
 import * as React from "react"
 import { cn } from "cn"
 
+/** Provide a card surface with default or compact spacing for its child slots. */
 function Card({
   className,
   size = "default",
