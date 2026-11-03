@@ -9,12 +9,22 @@ import { backupEnquiries, hasSheetsCredentials } from "@/lib/sheets";
 const CLIENT_HOURLY_LIMIT = 5;
 const GLOBAL_HOURLY_LIMIT = 100;
 
+let warnedClientIpHeader = false;
+
 function getClientQuotaKey(request: Request): string {
   const header = process.env.CLIENT_IP_HEADER?.trim().toLowerCase();
   const trustedHeaders = ["cf-connecting-ip", "x-real-ip", "x-forwarded-for"];
-  const address = (header && trustedHeaders.includes(header)
-    ? request.headers.get(header)?.trim()
-    : undefined) || "unknown";
+  const trustedHeader =
+    header && trustedHeaders.includes(header) ? header : undefined;
+  if (!trustedHeader && !warnedClientIpHeader) {
+    warnedClientIpHeader = true;
+    console.warn(
+      "CLIENT_IP_HEADER is unset or invalid. All enquiries share one client quota. Configure the header your ingress overwrites with the client IP.",
+    );
+  }
+  const address =
+    (trustedHeader ? request.headers.get(trustedHeader)?.trim() : undefined) ||
+    "unknown";
   const digest = createHash("sha256")
     .update(address)
     .digest("hex")

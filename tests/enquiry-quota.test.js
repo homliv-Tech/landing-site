@@ -15,6 +15,7 @@ let insertFails = false;
 let sheetsFails = false;
 let confirmsAppend = true;
 let errorLog;
+let warningLog;
 const dialect = new PgDialect();
 const credentialKeys = [
   "GOOGLE_SERVICE_ACCOUNT_EMAIL",
@@ -134,17 +135,19 @@ beforeEach(() => {
   insertFails = false;
   sheetsFails = false;
   confirmsAppend = true;
-  delete process.env.CLIENT_IP_HEADER;
+  process.env.CLIENT_IP_HEADER = "x-real-ip";
   process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL =
     "backup@example.iam.gserviceaccount.com";
   process.env.GOOGLE_PRIVATE_KEY =
     "-----BEGIN PRIVATE KEY-----\\nexample\\n-----END PRIVATE KEY-----";
   process.env.GOOGLE_SHEETS_SPREADSHEET_ID = "test-spreadsheet";
   errorLog = spyOn(console, "error").mockImplementation(() => {});
+  warningLog = spyOn(console, "warn").mockImplementation(() => {});
 });
 
 afterEach(() => {
   errorLog.mockRestore();
+  warningLog.mockRestore();
   if (originalClientIpHeader === undefined) delete process.env.CLIENT_IP_HEADER;
   else process.env.CLIENT_IP_HEADER = originalClientIpHeader;
   for (const key of credentialKeys) {
@@ -161,10 +164,14 @@ test("client quota uses only the configured ingress header", async () => {
   expect(quotaChecks[2].key).toBe(firstKey);
   await POST(request(valid, { "x-real-ip": "192.0.2.2" }));
   expect(quotaChecks[4].key).not.toBe(firstKey);
+  expect(warningLog).not.toHaveBeenCalled();
 });
 
 test("missing or invalid configuration and empty headers share a quota", async () => {
+  delete process.env.CLIENT_IP_HEADER;
   await POST(request(valid, { "user-agent": "first", "x-real-ip": "192.0.2.1" }));
+  expect(warningLog).toHaveBeenCalledTimes(1);
+  expect(warningLog.mock.calls[0][0]).toContain("CLIENT_IP_HEADER is unset or invalid");
   const fallbackKey = quotaChecks[0].key;
   process.env.CLIENT_IP_HEADER = "invalid header";
   await POST(request(valid, { "user-agent": "second" }));
@@ -172,6 +179,7 @@ test("missing or invalid configuration and empty headers share a quota", async (
   await POST(request(valid, { "user-agent": "third", "x-forwarded-for": "203.0.113.1" }));
   expect(quotaChecks[2].key).toBe(fallbackKey);
   expect(quotaChecks[4].key).toBe(fallbackKey);
+  expect(warningLog).toHaveBeenCalledTimes(1);
 });
 
 test("invalid requests do not consume quota", async () => {
