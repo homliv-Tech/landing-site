@@ -51,16 +51,19 @@ export default function StepFlow({
     const panel = panelRef.current;
     if (!panel) return;
 
-    const stickyHeight =
-      document.querySelector<HTMLElement>(".calc-tabs-wrap")?.offsetHeight ?? 0;
+    const stickyBottom = Math.max(
+      0,
+      document.querySelector<HTMLElement>(".calc-tabs-wrap")?.getBoundingClientRect().bottom ?? 0,
+      document.querySelector<HTMLElement>(".header")?.getBoundingClientRect().bottom ?? 0,
+    );
     const panelTop = panel.getBoundingClientRect().top;
 
-    if (panelTop >= stickyHeight + 12) return;
+    if (panelTop >= stickyBottom + 12) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    panel.scrollIntoView({
+    window.scrollBy({
+      top: panelTop - stickyBottom - 12,
       behavior: reduced ? "auto" : "smooth",
-      block: "start",
     });
   }, [current]);
 
