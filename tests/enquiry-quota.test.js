@@ -200,10 +200,18 @@ test("empty fields are rejected before quota or storage", async () => {
     address: "Enter your apartment address.",
     apartmentType: "Select your apartment type.",
     budget: "Select your budget range.",
-    message: "Tell us about your requirements.",
   });
   expect(quotaChecks).toHaveLength(0);
   expect(inserts).toBe(0);
+});
+test.each(["", "   ", undefined])("blank or omitted requirements are saved successfully (%s)", async (message) => {
+  const response = await POST(request({ ...valid, message }));
+  expect(response.status).toBe(201);
+  expect(storedRows[0].message).toBeNull();
+  expect(afterCallbacks).toHaveLength(1);
+  await afterCallbacks[0]();
+  expect(appendRequests).toHaveLength(1);
+  expect(markedIds).toEqual([storedRows[0].id]);
 });
 test("honeypot submissions receive a neutral success without storage", async () => {
   const response = await POST(

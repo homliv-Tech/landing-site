@@ -251,14 +251,13 @@ export function ConsultationFields({ pending }: { pending: boolean }) {
         render={({ field }) => (
           <FormItem className="consultation-field consultation-field-full">
             <FormLabel>
-              Tell us about your requirements <Required />
+              Tell us about your requirements (optional)
             </FormLabel>
             <FormControl>
               <Textarea
                 placeholder="E.g. modular kitchen, two wardrobes, false ceiling, painting…"
                 maxLength={5000}
                 rows={5}
-                required
                 disabled={pending}
                 className={`${inputClassName} min-h-32 resize-y py-3 leading-6`}
                 {...field}
