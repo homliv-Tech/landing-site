@@ -26,6 +26,7 @@ const badgeVariants = cva(
   }
 )
 
+/** Apply badge variants while composing custom elements through Base UI's render prop. */
 function Badge({
   className,
   variant = "default",

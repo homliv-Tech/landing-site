@@ -106,7 +106,10 @@ export default function FullHomeCalculator() {
 
   /** Update 5 BHK+ room limits, preserving any deliberate reductions to the design scope. */
   const updateBedroomCount = (raw: string) => {
-    const nextCount = getHomeBedroomCount(bhkId, Number(raw));
+    const text = raw.trim();
+    const parsed = text === "" ? NaN : Number(text);
+    if (!Number.isSafeInteger(parsed) || parsed < 5) return actualBedroomCount;
+    const nextCount = getHomeBedroomCount(bhkId, parsed);
     if (nextCount === actualBedroomCount) return nextCount;
     setHasStarted(true);
     setBedroomCount(nextCount);
@@ -114,8 +117,8 @@ export default function FullHomeCalculator() {
       ...current,
       bedroom: current.bedroom === actualBedroomCount
         ? nextCount : Math.min(current.bedroom, nextCount),
-      bathroom: current.bathroom === actualBedroomCount
-        ? nextCount : Math.min(current.bathroom, nextCount + 1),
+      bathroom: current.bathroom === actualBedroomCount + 1
+        ? nextCount + 1 : Math.min(current.bathroom, nextCount + 1),
     }));
     return nextCount;
   };

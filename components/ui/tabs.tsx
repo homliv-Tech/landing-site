@@ -4,6 +4,7 @@ import { Tabs as TabsPrimitive } from "@base-ui/react/tabs"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
 
+/** Group tab controls and panels with horizontal layout as the default presentation. */
 function Tabs({
   className,
   orientation = "horizontal",
@@ -37,6 +38,7 @@ const tabsListVariants = cva(
   }
 )
 
+/** Apply either the filled or underline visual treatment to a group of tab controls. */
 function TabsList({
   className,
   variant = "default",

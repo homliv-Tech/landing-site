@@ -27,6 +27,7 @@ function SelectValue({ className, ...props }: SelectPrimitive.Value.Props) {
   )
 }
 
+/** Render the labelled select button and chevron with default or compact sizing. */
 function SelectTrigger({
   className,
   size = "default",
@@ -55,6 +56,7 @@ function SelectTrigger({
   )
 }
 
+/** Position the select's portal and scrollable options relative to its trigger. */
 function SelectContent({
   className,
   children,

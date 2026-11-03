@@ -3,6 +3,7 @@
 import { Separator as SeparatorPrimitive } from "@base-ui/react/separator"
 import { cn } from "cn"
 
+/** Draw a separator using the requested orientation, defaulting to horizontal. */
 function Separator({
   className,
   orientation = "horizontal",
