@@ -1071,6 +1071,7 @@ footer {
 }
 
 .team-photo {
+  position: relative;
   aspect-ratio: 4 / 5;
   background: var(--beige-dark);
   display: grid;
@@ -1091,6 +1092,17 @@ footer {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.team-photo .team-photo-vinayak {
+  object-position: center top;
+  transform: scale(1.02);
+  transform-origin: center top;
+}
+
+.team-photo .team-photo-budhabushan {
+  transform: scale(1.3);
+  transform-origin: 50% 60%;
 }
 
 .team-meta {
