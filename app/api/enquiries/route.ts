@@ -10,19 +10,13 @@ const CLIENT_HOURLY_LIMIT = 5;
 const GLOBAL_HOURLY_LIMIT = 100;
 
 function getClientQuotaKey(request: Request): string {
-  const forwardedFor = request.headers
-    .get("x-forwarded-for")
-    ?.split(",")[0]
-    ?.trim();
-  const address =
-    request.headers.get("cf-connecting-ip")?.trim() ||
-    request.headers.get("x-real-ip")?.trim() ||
-    forwardedFor ||
-    "unknown";
-  const fallback =
-    address === "unknown" ? request.headers.get("user-agent") ?? "unknown" : "";
+  const header = process.env.CLIENT_IP_HEADER?.trim().toLowerCase();
+  const trustedHeaders = ["cf-connecting-ip", "x-real-ip", "x-forwarded-for"];
+  const address = (header && trustedHeaders.includes(header)
+    ? request.headers.get(header)?.trim()
+    : undefined) || "unknown";
   const digest = createHash("sha256")
-    .update(`${address}|${fallback}`)
+    .update(address)
     .digest("hex")
     .slice(0, 32);
 

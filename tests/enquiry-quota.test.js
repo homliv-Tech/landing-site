@@ -24,6 +24,7 @@ const credentialKeys = [
 const originalCredentials = Object.fromEntries(
   credentialKeys.map((key) => [key, process.env[key]]),
 );
+const originalClientIpHeader = process.env.CLIENT_IP_HEADER;
 mock.module("@/lib/enquiry-quota", () => ({
   reserveEnquirySlot: async (key, limit) => {
     quotaChecks.push({ key, limit });
@@ -113,9 +114,10 @@ const valid = {
   budget: "10-20-lakh",
   message: "A project",
 };
-const request = (body) =>
+const request = (body, headers = {}) =>
   new Request("http://localhost/api/enquiries", {
     method: "POST",
+    headers,
     body: JSON.stringify(body),
   });
 beforeEach(() => {
@@ -132,6 +134,7 @@ beforeEach(() => {
   insertFails = false;
   sheetsFails = false;
   confirmsAppend = true;
+  delete process.env.CLIENT_IP_HEADER;
   process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL =
     "backup@example.iam.gserviceaccount.com";
   process.env.GOOGLE_PRIVATE_KEY =
@@ -142,10 +145,33 @@ beforeEach(() => {
 
 afterEach(() => {
   errorLog.mockRestore();
+  if (originalClientIpHeader === undefined) delete process.env.CLIENT_IP_HEADER;
+  else process.env.CLIENT_IP_HEADER = originalClientIpHeader;
   for (const key of credentialKeys) {
     if (originalCredentials[key] === undefined) delete process.env[key];
     else process.env[key] = originalCredentials[key];
   }
+});
+
+test("client quota uses only the configured ingress header", async () => {
+  process.env.CLIENT_IP_HEADER = "X-Real-IP";
+  await POST(request(valid, { "x-real-ip": "192.0.2.1", "cf-connecting-ip": "198.51.100.1", "x-forwarded-for": "203.0.113.1" }));
+  const firstKey = quotaChecks[0].key;
+  await POST(request(valid, { "x-real-ip": "192.0.2.1", "cf-connecting-ip": "198.51.100.2", "x-forwarded-for": "203.0.113.2" }));
+  expect(quotaChecks[2].key).toBe(firstKey);
+  await POST(request(valid, { "x-real-ip": "192.0.2.2" }));
+  expect(quotaChecks[4].key).not.toBe(firstKey);
+});
+
+test("missing or invalid configuration and empty headers share a quota", async () => {
+  await POST(request(valid, { "user-agent": "first", "x-real-ip": "192.0.2.1" }));
+  const fallbackKey = quotaChecks[0].key;
+  process.env.CLIENT_IP_HEADER = "invalid header";
+  await POST(request(valid, { "user-agent": "second" }));
+  process.env.CLIENT_IP_HEADER = "x-real-ip";
+  await POST(request(valid, { "user-agent": "third", "x-forwarded-for": "203.0.113.1" }));
+  expect(quotaChecks[2].key).toBe(fallbackKey);
+  expect(quotaChecks[4].key).toBe(fallbackKey);
 });
 
 test("invalid requests do not consume quota", async () => {
