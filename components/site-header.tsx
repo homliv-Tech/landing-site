@@ -69,6 +69,10 @@ export default function SiteHeader({
             <Link
               key={`mobile-${link.label}`}
               href={link.href}
+              onClick={(event) => {
+                const menu = event.currentTarget.closest("details");
+                if (menu) menu.open = false;
+              }}
               aria-current={current === link.id ? "page" : undefined}
               data-enquiry-location={
                 link.id === "contact" ? `${enquiryLocation}_mobile` : undefined

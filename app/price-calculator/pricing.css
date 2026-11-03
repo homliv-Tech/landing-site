@@ -57,7 +57,7 @@
 
 .calc-tabs-wrap {
   position: sticky;
-  top: 0;
+  top: 105px;
   z-index: 8;
   background: rgba(247, 245, 239, 0.94);
   backdrop-filter: blur(14px);
@@ -86,7 +86,7 @@
   justify-content: center;
   gap: 6px;
   height: auto;
-  min-height: 76px;
+  min-height: 96px;
   padding: 22px 24px 20px;
   border: 0;
   border-right: 1px solid var(--beige-dark);
@@ -1194,7 +1194,7 @@
 
 .calc-summary {
   position: sticky;
-  top: 96px;
+  top: 223px;
   display: flex;
   flex-direction: column;
   padding: clamp(24px, 3vw, 34px);
@@ -1500,6 +1500,10 @@
 }
 
 @media (max-width: 700px) {
+  .calc-tabs-wrap {
+    top: 80px;
+  }
+
   .pricing-hero {
     padding: 44px 6% 40px;
   }
