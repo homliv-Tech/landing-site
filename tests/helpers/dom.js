@@ -1,3 +1,5 @@
+import { mock } from "bun:test";
+mock.module("server-only", () => ({}));
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
 
 const network = { fetch, Request, Response, Headers };
