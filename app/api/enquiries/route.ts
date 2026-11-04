@@ -5,6 +5,7 @@ import { getDb } from "@/lib/db";
 import { enquiries } from "@/lib/schema";
 import { enquirySchema, zodErrorToFieldErrors } from "@/lib/enquiry";
 import { backupEnquiries, hasSheetsCredentials } from "@/lib/sheets";
+import { deliverCrmEnquiry } from "@/lib/crm-delivery";
 
 const CLIENT_HOURLY_LIMIT = 5;
 const GLOBAL_HOURLY_LIMIT = 100;
@@ -107,6 +108,13 @@ export async function POST(request: Request): Promise<Response> {
     console.error("Could not save enquiry", error);
     return Response.json({ error: "Could not save your enquiry. Please try again." }, { status: 500 });
   }
+  after(async () => {
+    try {
+      await deliverCrmEnquiry({ enquiryId: id });
+    } catch {
+      console.error("Enquiry saved; CRM delivery is pending");
+    }
+  });
   if (hasSheetsCredentials()) {
     after(async () => {
       try {

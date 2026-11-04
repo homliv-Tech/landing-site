@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, expect, mock, spyOn, test } from "bun:test";
+import * as crmDelivery from "../lib/crm-delivery";
 import { PgDialect } from "drizzle-orm/pg-core";
 
 let allowed = true;
@@ -104,6 +105,9 @@ mock.module("next/server", () => ({
     afterCallbacks.push(callback);
   },
 }));
+let crmCalls = [];
+let crmFails = false;
+let crmSpy;
 const { POST } = await import("../app/api/enquiries/route");
 const { backupEnquiries } = await import("../lib/sheets");
 const valid = {
@@ -122,6 +126,12 @@ const request = (body, headers = {}) =>
     body: JSON.stringify(body),
   });
 beforeEach(() => {
+  crmSpy = spyOn(crmDelivery, "deliverCrmEnquiry").mockImplementation(async (options) => {
+    crmCalls.push(options);
+    if (crmFails) throw new Error("unavailable");
+  });
+  crmCalls = [];
+  crmFails = false;
   allowed = true;
   quotaFails = false;
   quotaResults = [];
@@ -146,6 +156,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  crmSpy.mockRestore();
   errorLog.mockRestore();
   warningLog.mockRestore();
   if (originalClientIpHeader === undefined) delete process.env.CLIENT_IP_HEADER;
@@ -208,8 +219,8 @@ test.each(["", "   ", undefined])("blank or omitted requirements are saved succe
   const response = await POST(request({ ...valid, message }));
   expect(response.status).toBe(201);
   expect(storedRows[0].message).toBeNull();
-  expect(afterCallbacks).toHaveLength(1);
-  await afterCallbacks[0]();
+  expect(afterCallbacks).toHaveLength(2);
+  await Promise.all(afterCallbacks.map((callback) => callback()));
   expect(appendRequests).toHaveLength(1);
   expect(markedIds).toEqual([storedRows[0].id]);
 });
@@ -262,11 +273,13 @@ test("each database insert schedules an append for that exact enquiry", async ()
   expect(markedIds).toEqual([id]);
 });
 
-test("missing optional Sheets credentials does not schedule a backup", async () => {
+test("missing optional Sheets credentials schedules only CRM delivery", async () => {
   for (const key of credentialKeys) delete process.env[key];
   expect((await POST(request(valid))).status).toBe(201);
   expect(inserts).toBe(1);
-  expect(afterCallbacks).toHaveLength(0);
+  expect(afterCallbacks).toHaveLength(1);
+  await afterCallbacks[0]();
+  expect(crmCalls).toEqual([{ enquiryId: storedRows[0].id }]);
   expect(appendRequests).toHaveLength(0);
 });
 
@@ -370,4 +383,16 @@ test("decodes multibyte characters split across chunks", async () => {
       )
     ).status,
   ).toBe(201);
+});
+
+test("CRM failure preserves local success and independent Sheets backup", async () => {
+  crmFails = true;
+  const response = await POST(request(valid));
+  const result = await response.json();
+  expect(response.status).toBe(201);
+  expect(Object.keys(result)).toEqual(["id"]);
+  await Promise.all(afterCallbacks.map((callback) => callback()));
+  expect(crmCalls).toEqual([{ enquiryId: result.id }]);
+  expect(storedRows).toHaveLength(1);
+  expect(markedIds).toEqual([result.id]);
 });
