@@ -60,6 +60,7 @@ type Phase = "intro" | "reveal" | "done";
 
 /* ── component ───────────────────────────────────────────────── */
 
+/** Cycle greetings before a curtain reveal, respecting reduced motion and session replay limits. */
 export const TextPreloader = ({
   greetings = DEFAULT_GREETINGS,
   greetingHold = 720,
@@ -90,19 +91,17 @@ export const TextPreloader = ({
 
   // Honor reduced-motion + replay-suppression on mount.
   React.useEffect(() => {
-    if (prefersReducedMotion) {
-      setPhase("done");
-      return;
-    }
-    if (storageKey && typeof window !== "undefined") {
+    let shouldSkip = Boolean(prefersReducedMotion);
+    if (!shouldSkip && storageKey && typeof window !== "undefined") {
       try {
-        if (window.sessionStorage.getItem(storageKey) === "done") {
-          setPhase("done");
-        }
+        shouldSkip = window.sessionStorage.getItem(storageKey) === "done";
       } catch {
         /* sessionStorage can throw in private mode — fall through */
       }
     }
+    if (!shouldSkip) return;
+    const frame = window.requestAnimationFrame(() => setPhase("done"));
+    return () => window.cancelAnimationFrame(frame);
   }, [prefersReducedMotion, storageKey]);
 
   // Greeting cycle.

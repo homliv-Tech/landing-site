@@ -1,4 +1,7 @@
+import SiteFooter from "@/components/site-footer";
+import SiteHeader from "@/components/site-header";
 import TextPreloader from "@/components/prsui/text-preloader";
+import ConsultationForm from "@/components/consultation-form";
 
 const Arrow = () => <span aria-hidden="true">↗</span>;
 const inspirations = [
@@ -9,14 +12,9 @@ const inspirations = [
 
 export default function Home() {
   return (
-    <TextPreloader storageKey="homliv-intro" greetings={[{text:"Welcome"},{text:"To a better way"},{text:"To feel at home"},{text:"homliv"}]} greetingHold={550} revealDuration={1100} introClassName="preloader-intro" greetingClassName="preloader-text">
+    <TextPreloader storageKey="homliv-intro" greetings={[{text:"Welcome"},{text:"To a better way"},{text:"To feel at home"},{text:"Homliv, Make Your Home Livly "}]} greetingHold={850} revealDuration={1500} introClassName="preloader-intro" greetingClassName="preloader-text">
       <main id="home">
-        <header className="header">
-          <a href="#home" className="brand" aria-label="Homliv home"><img src="/homliv-logo.svg" alt="Homliv" /></a>
-          <nav aria-label="Main navigation"><a href="#studio">Studio</a><a href="#inspiration">Inspiration</a><a href="#approach">Approach</a><a href="/team">Team</a><a href="#contact">Contact</a></nav>
-          <a className="nav-enquiry" data-enquiry-location="header" href="#contact">Project enquiry <Arrow /></a>
-          <details className="mobile-menu"><summary aria-label="Open navigation"><span></span><span></span></summary><nav aria-label="Mobile navigation"><a href="#studio">Studio</a><a href="#inspiration">Inspiration</a><a href="#approach">Approach</a><a href="/team">Team</a><a href="#contact" data-enquiry-location="mobile_menu">Contact</a></nav></details>
-        </header>
+        <SiteHeader current="home" enquiryLocation="header" />
 
         <section className="hero" data-analytics-section="hero">
           <div className="hero-overlay" />
@@ -35,8 +33,22 @@ export default function Home() {
 
         <section className="approach" id="approach" data-analytics-section="approach"><div className="approach-image" role="img" aria-label="Bright, open-plan home interior" /><div className="approach-copy"><span className="small-label">Our Approach</span><h2>Thoughtful design.<br />A clearer path forward.</h2><p>Good design begins with listening. We take the time to understand your vision and turn it into a home that feels right for you.</p><p>With architectural work delivered within 60 days, you can move toward what comes next with confidence.</p><a href="#contact" className="round-link" data-enquiry-location="approach"><span>Start your project</span><i><Arrow /></i></a></div></section>
 
-        <section className="contact section-space" id="contact" data-analytics-section="contact"><span className="small-label">Your next chapter</span><h2>Tell us about<br />your project.</h2><p>Have an idea for a place to call home? We’d love to hear about it.</p><p className="contact-note">Contact details coming soon.</p></section>
-        <footer><div className="footer-main"><a href="#home" className="footer-wordmark">homliv</a><p>Thoughtful architecture.<br />Made for living.</p><div className="footer-nav"><a href="#home">Home</a><a href="#studio">Studio</a><a href="#inspiration">Inspiration</a><a href="#approach">Approach</a><a href="/team">Team</a><a href="#contact">Contact</a></div></div><div className="footer-bottom"><span>© 2026 HOMLIV. ALL RIGHTS RESERVED.</span><a href="#home">BACK TO TOP ↑</a></div></footer>
+        <section className="contact section-space" id="contact" data-analytics-section="contact">
+          <div className="contact-layout">
+            <div className="contact-intro">
+              <span className="small-label">Your next chapter</span>
+              <h2>Let’s create a home that feels like yours.</h2>
+              <p>Share a few details about your space and priorities. Our design team will call you to understand the project and guide you through the next steps.</p>
+              <div className="contact-assurance" aria-label="Consultation details">
+                <span><strong>01</strong> Free discovery call</span>
+                <span><strong>02</strong> No obligation</span>
+                <span><strong>03</strong> Clear next steps</span>
+              </div>
+            </div>
+            <ConsultationForm />
+          </div>
+        </section>
+        <SiteFooter />
       </main>
     </TextPreloader>
   );
