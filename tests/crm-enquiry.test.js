@@ -61,6 +61,23 @@ test.each([429, 500, 503])("HTTP %i is retryable and honors Retry-After", async 
   expect(result).toEqual({ state: "pending", diagnostic: `http_${status}`, retryAfter: 120000 });
 });
 
+test.each([
+  ["0", 0],
+  ["86400", 86400000],
+  ["86401", 86400000],
+  ["999999999999999999999999", 86400000],
+  ["9".repeat(400), 86400000],
+  ["Fri, 01 Jan 9999 00:00:00 GMT", 86400000],
+  ["invalid", undefined],
+  ["Wed, 01 Jan 2020 00:00:00 GMT", undefined],
+])("Retry-After %s produces a bounded delay", async (header, expected) => {
+  const result = await sendCrmEnquiry(payload, config, async () => new Response(null, {
+    status: 429, headers: { "Retry-After": header },
+  }));
+  expect(result.state).toBe("pending");
+  expect(result.retryAfter).toBe(expected);
+});
+
 test("HTTP-date Retry-After, network failures, and timeouts", async () => {
   const date = new Date(Date.now() + 300000).toUTCString();
   const result = await sendCrmEnquiry(payload, config, async () => new Response(null, { status: 503, headers: { "Retry-After": date } }));

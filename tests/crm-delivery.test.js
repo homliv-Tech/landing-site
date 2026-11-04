@@ -126,6 +126,19 @@ test("conflict is flagged without replacing UUID or retrying automatically", asy
   expect(await deliverCrmEnquiry({ backfillLegacy: true }, db)).toBe("idle");
 });
 
+test("oversized Retry-After commits a bounded retry timestamp", async () => {
+  globalThis.fetch = async () => new Response(null, {
+    status: 429, headers: { "Retry-After": "999999999999999999999999" },
+  });
+  const before = Date.now();
+  expect(await deliverCrmEnquiry({}, db)).toBe("pending");
+  const [saved] = await db.select().from(enquiries);
+  expect(saved.crmDiagnostic).toBe("http_429");
+  expect(saved.crmNextAttemptAt.getTime()).toBeGreaterThanOrEqual(before + 86400000);
+  expect(saved.crmNextAttemptAt.getTime()).toBeLessThanOrEqual(Date.now() + 86400000);
+  expect(await deliverCrmEnquiry({}, db)).toBe("idle");
+});
+
 test("late result from an expired lease cannot overwrite a newer claim", async () => {
   let release;
   let started;
