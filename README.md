@@ -86,7 +86,9 @@ matching duplicate flag count as success. Successful rows are permanently exclud
 from routine jobs, including legacy backfill. Network failures, timeouts, invalid
 acknowledgements, 429 and 5xx remain pending, with exponential backoff and jitter
 (30–60 seconds initially, capped at 30–60 minutes). A longer `Retry-After` takes
-precedence. Other responses block automatic delivery for correction: in particular,
+precedence, capped at 24 hours for both numeric and HTTP-date values to keep
+untrusted headers from overflowing the stored retry timestamp. Other responses
+block automatic delivery for correction: in particular,
 409 is a UUID/data conflict, 401 requires credential correction, and 400/413/415
 require data or implementation correction. Redirects are blocked too.
 

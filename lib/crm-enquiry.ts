@@ -4,6 +4,7 @@ import { enquirySchema } from "./enquiry";
 
 export const CRM_TIMEOUT_MS = 10_000;
 export const CRM_LEASE_MS = 60_000;
+const MAX_RETRY_AFTER_MS = 24 * 60 * 60 * 1000;
 const payloadSchema = enquirySchema.extend({
   id: z.uuid(),
   createdAt: z.iso.datetime({ offset: true }),
@@ -61,8 +62,14 @@ export function retryDelay(attempt: number, random = Math.random): number {
 
 function retryAfter(value: string | null, now: number): number | undefined {
   if (!value) return undefined;
-  const seconds = /^\d+$/.test(value) ? Number(value) * 1000 : Date.parse(value) - now;
-  return Number.isFinite(seconds) && seconds >= 0 ? seconds : undefined;
+  // Clamp seconds before converting to milliseconds, including values that
+  // overflow Number. Untrusted headers must not overflow the stored timestamp.
+  if (/^\d+$/.test(value)) {
+    return Math.min(Number(value), MAX_RETRY_AFTER_MS / 1000) * 1000;
+  }
+  const delay = Date.parse(value) - now;
+  return Number.isFinite(delay) && delay >= 0
+    ? Math.min(delay, MAX_RETRY_AFTER_MS) : undefined;
 }
 
 export async function sendCrmEnquiry(
