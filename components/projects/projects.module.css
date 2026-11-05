@@ -64,7 +64,7 @@
   .heroText h1 { font-size: 64px; }
   .heroText > p:not(.eyebrow) { max-width: 540px; }
   .heroText .textLink { margin-top: 0; }
-  .featured { min-height: 0; padding-block: 96px; }
+  .featured { height: auto; min-height: 0; padding-block: 96px; }
   .sectionHead { display: block; }
   .sectionAside { margin-top: 24px; max-width: 100%; display: flex; gap: 32px; align-items: end; justify-content: space-between; }
   .sectionAside p { max-width: 300px; margin: 0; }
