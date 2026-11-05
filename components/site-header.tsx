@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-type CurrentPage = "home" | "pricing" | "team" | "careers";
+type CurrentPage = "home" | "pricing" | "team" | "careers" | "projects";
 
 type SiteHeaderProps = {
   current?: CurrentPage;
@@ -13,7 +13,7 @@ type SiteHeaderProps = {
 
 const links: { id: CurrentPage | "contact"; label: string; href: string }[] = [
   { id: "home", label: "Studio", href: "/#studio" },
-  { id: "home", label: "Inspiration", href: "/#inspiration" },
+  { id: "projects", label: "Projects", href: "/projects" },
   { id: "home", label: "Approach", href: "/#approach" },
   { id: "pricing", label: "Pricing", href: "/price-calculator" },
   { id: "team", label: "Team", href: "/team" },
@@ -40,7 +40,7 @@ export default function SiteHeader({
   return (
     <header className={`header ${variant === "solid" ? "header--solid" : "header--overlay"}${scrolled ? " header--scrolled" : ""}`}>
       <Link href="/" className="brand" aria-label="Homliv home">
-        <img src="/homliv-logo.svg" alt="Homliv" />
+        <img src="/homliv-logo.svg" alt="Homliv" width={210} height={210} />
       </Link>
       <nav aria-label="Main navigation">
         {links.map((link) => (

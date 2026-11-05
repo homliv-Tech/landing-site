@@ -158,3 +158,9 @@ For a staging end-to-end smoke test:
 `bun test` includes isolated PostgreSQL-compatible PGlite migration/state tests,
 HTTP contract/classification/timeout tests, overlapping lease and stale-result tests,
 and form/Sheets regressions. These tests use no deployment database or CRM service.
+
+## Project portfolio
+
+The projects index and individual multi-photo galleries use `lib/projects.ts`.
+See [the project photography guide](docs/projects.md) to replace the temporary
+inspiration collections with approved projects and public Cloudflare R2 photos.

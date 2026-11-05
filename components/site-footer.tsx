@@ -37,7 +37,7 @@ export default function SiteFooter({ photoCredit = false }: { photoCredit?: bool
           <nav className={styles.navigation} aria-label="Footer navigation">
             <Link href="/">Home</Link>
             <Link href="/#studio">Studio</Link>
-            <Link href="/#inspiration">Inspiration</Link>
+            <Link href="/projects">Projects</Link>
             <Link href="/#approach">Approach</Link>
             <Link href="/price-calculator">Pricing</Link>
             <Link href="/team">Team</Link>
