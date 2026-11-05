@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function ProjectsPage() {
   const kind = getProjectCollectionKind(projects);
-  const cover = projects[0].photos[1] ?? projects[0].photos[0];
+  const cover = projects[0].photos[0];
   return (
     <div id="top" className={styles.page}>
       <SiteHeader current="projects" variant="solid" enquiryLocation="projects_header" />

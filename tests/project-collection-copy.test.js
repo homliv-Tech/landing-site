@@ -3,7 +3,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import FeaturedProjects from "../components/projects/featured-projects";
 import ProjectsPage from "../app/projects/page";
-import { projects } from "../lib/projects";
+import { projects, projectPhotoUrl } from "../lib/projects";
 
 const inspiration = projects[0];
 const approved = {
@@ -21,6 +21,25 @@ function withCatalogue(entries, run) {
     projects.splice(0, projects.length, ...original);
   }
 }
+
+test.each([
+  ["single-photo", approved],
+  ["multi-photo", inspiration],
+])("projects hero uses the cover of a %s project", (_name, project) => {
+  withCatalogue([project], () => {
+    const container = document.createElement("div");
+    container.innerHTML = renderToStaticMarkup(createElement(ProjectsPage));
+    const hero = container.querySelector('section[aria-labelledby="projects-heading"]');
+    const image = hero.querySelector("img");
+    const source = new URL(image.getAttribute("src"), "http://localhost");
+    const cover = project.photos[0];
+    expect(source.searchParams.get("url")).toBe(projectPhotoUrl(cover));
+    expect(image.getAttribute("alt")).toBe(cover.alt);
+    expect(image.getAttribute("width")).toBe(String(cover.width));
+    expect(image.getAttribute("height")).toBe(String(cover.height));
+    expect(hero.querySelector('a[href^="/projects/"]').getAttribute("href")).toBe(`/projects/${project.slug}`);
+  });
+});
 
 test.each([
   ["inspiration", [inspiration], "Design inspiration", "inspiration collections"],
