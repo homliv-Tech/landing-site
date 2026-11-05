@@ -28,6 +28,7 @@
       "devDependencies": {
         "@electric-sql/pglite": "^0.5.15",
         "@happy-dom/global-registrator": "^21.0.4",
+        "@pruven/zeke": "^0.1.1",
         "@tailwindcss/turbopack": "^4",
         "@testing-library/react": "^16.3.3",
         "@testing-library/user-event": "^14.6.8",
@@ -325,6 +326,8 @@
     "@posthog/core": ["@posthog/core@1.62.0", "", { "dependencies": { "@posthog/types": "^1.418.0" } }, "sha512-KjNwGC7s0141wnWWHubNMdg1lOhZjqKRw2OTNstuzdVvNDfvv2RbFJQSSvvABmbCmTXwlMpdnbb/M/aAigDnNQ=="],
 
     "@posthog/types": ["@posthog/types@1.419.0", "", {}, "sha512-XX7zRYt/vK8AzaD6V+oDquAzacZf5exJv971dja9En8Qf6g84Qvc3rpT0w6hDYYLWrjaSSkdjFfvvoXI0ouJDg=="],
+
+    "@pruven/zeke": ["@pruven/zeke@0.1.1", "", { "bin": { "zeke": "bin/zeke.js" } }, "sha512-C6YVOiz0cLKhBt3DF1EP2bqNta8E83KHedaPsrCZ/wQmEudh6lqj0BnpkW/x32DwtbXYo5djrZR5gNnDWvxp8Q=="],
 
     "@rtsao/scc": ["@rtsao/scc@1.1.0", "", {}, "sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g=="],
 
