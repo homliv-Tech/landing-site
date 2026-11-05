@@ -133,6 +133,26 @@ test("pressing an outside form field preserves focus on that field", async () =>
   await screen.findByRole("dialog", { name: journeyStages[0].title });
 });
 
+test("pressing nonfocusable page content restores focus to the step without reopening", async () => {
+  supportPreventScroll();
+  const user = userEvent.setup();
+  render(createElement("div", null,
+    createElement(JourneyExplorer, { stages: journeyStages }),
+    createElement("p", null, "Outside page content"),
+  ));
+  const first = screen.getByRole("button", { name: `Step 1: ${journeyStages[0].title}` });
+  await user.tab();
+  const details = await screen.findByRole("dialog", { name: journeyStages[0].title });
+  await user.tab();
+  expect(document.activeElement === within(details).getByRole("button", { name: "Close step details" })).toBe(true);
+  await user.click(screen.getByText("Outside page content"));
+  await waitFor(() => expect(screen.queryByRole("dialog") === null).toBe(true));
+  await waitFor(() => expect(document.activeElement === first).toBe(true));
+  expect(first.getAttribute("aria-expanded")).toBe("false");
+  await user.tab();
+  expect(document.activeElement === screen.getByRole("button", { name: `Step 2: ${journeyStages[1].title}` })).toBe(true);
+});
+
 test("outside-dismissed hover does not prevent focus restoration on a later preview", async () => {
   supportPreventScroll();
   const user = userEvent.setup();

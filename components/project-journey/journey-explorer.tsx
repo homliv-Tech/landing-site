@@ -44,6 +44,7 @@ export function JourneyExplorer({ stages }: { stages: JourneyStage[] }) {
   const keyboardPreviewTarget = useRef<HTMLElement | null>(null);
   const restoredFocusTarget = useRef<HTMLElement | null>(null);
   const keepOutsideFocus = useRef(false);
+  const popupRef = useRef<HTMLDivElement | null>(null);
   // The shared popover tracks payload identity while switching between triggers.
   const selections = useMemo(
     () => stages.map((stage, index) => ({ stage, index, total: stages.length })),
@@ -161,11 +162,16 @@ export function JourneyExplorer({ stages }: { stages: JourneyStage[] }) {
             </ol>
 
             <PopoverContent
+              ref={popupRef}
               className={styles.stepPopover}
               initialFocus={(interactionType) => interactionType === "touch"}
               finalFocus={() => {
-                // Let the pressed link or form control keep focus after dismissal.
-                if (keepOutsideFocus.current) return false;
+                const activeElement = document.activeElement;
+                // Preserve an outside control; restore the step when focus would be lost.
+                if (keepOutsideFocus.current && activeElement && activeElement !== document.body &&
+                  activeElement !== document.documentElement && !popupRef.current?.contains(activeElement)) {
+                  return false;
+                }
                 const trigger = payload ? document.getElementById(`${journeyId}-${payload.stage.id}`) : null;
                 if (trigger && document.activeElement !== trigger) restoredFocusTarget.current = trigger;
                 return trigger ?? true;
