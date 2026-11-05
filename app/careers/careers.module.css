@@ -1,6 +1,10 @@
 .page {
   --bg: var(--paper);
   --action: var(--forest);
+  --m-in: 140ms;
+  --m-out: 200ms;
+  --m-press: 90ms;
+  --m-ease: cubic-bezier(.2, .8, .2, 1);
   background: var(--paper);
 }
 
@@ -87,6 +91,64 @@
   font-weight: 500;
 }
 
+:global(html:not([data-motion="off"])) .teamLink {
+  position: relative;
+  transition: background-color var(--m-out) var(--m-ease),
+    transform var(--m-press) var(--m-ease);
+}
+
+:global(html:not([data-motion="off"])) .teamLink:hover {
+  background: color-mix(in oklab, var(--action) 84%, var(--bg));
+  transition-duration: var(--m-in), var(--m-press);
+}
+
+:global(html:not([data-motion="off"])) .teamLink:focus-visible {
+  animation: focusRing var(--m-out) var(--m-ease);
+}
+
+@keyframes focusRing {
+  from { outline-offset: 6px; outline-color: transparent; }
+}
+
+.arrow {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.arrowStem {
+  opacity: 0;
+  transform: scaleX(.2);
+  transform-origin: 1px 50%;
+  transform-box: fill-box;
+  transition: opacity var(--m-out) var(--m-ease), transform var(--m-out) var(--m-ease);
+}
+
+.arrowHead { transition: transform var(--m-out) var(--m-ease); }
+
+.teamLink:is(:hover, :focus-visible) .arrowStem {
+  opacity: 1;
+  transform: none;
+  transition-duration: var(--m-in);
+}
+
+.teamLink:is(:hover, :focus-visible) .arrowHead {
+  transform: translateX(3px);
+  transition-duration: var(--m-in);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :global(html:not([data-motion="off"])) .teamLink:hover { transform: translateY(-1px); }
+}
+
+:global(html:not([data-motion="off"])) .teamLink:active { transform: translateY(1px) scale(.985); }
+
 .openings { margin-top: auto; padding-top: 48px; max-width: 42ch; }
 .statusLine { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
 .statusDot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); }
@@ -142,4 +204,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .skipLink { transition: none; }
+  :global(html:not([data-motion="off"])) .teamLink:is(:hover, :active) { transform: none; }
+  :global(html:not([data-motion="off"])) .teamLink:focus-visible { animation: none; }
+  .teamLink:is(:hover, :focus-visible) .arrowHead,
+  .arrowStem { transform: none; }
+  .arrowStem { opacity: 1; }
 }

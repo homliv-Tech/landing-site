@@ -10,7 +10,7 @@ Assets
 - public/images/careers/interior.webp is Unsplash architectural inspiration already used on the home page, not a photograph of Homliv's studio or project. Source: https://images.unsplash.com/photo-1600210492486-724fe5c67fb0 . Footer credit links to Unsplash.
 - This one stand-in frame can be replaced by a commissioned photograph of a Homliv project or studio. No other client slots or missing assets.
 - Brand name, logo, colours and font are existing assets. No prices, hours, addresses, names, benefits or statistics were assumed.
-- Skill motion.css is copied unchanged; its button hover, press and reduced-motion handling are used.
+- Button hover, press, arrow and reduced-motion styles are adapted from the skill into careers.module.css. CSS Modules scope the rules and motion tokens to Careers; no global motion stylesheet is imported.
 
 Verification
 - Production build, TypeScript and changed-page/footer lint pass. The header has its pre-existing raw logo img lint warning.
