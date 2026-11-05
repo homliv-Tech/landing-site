@@ -10,7 +10,7 @@ const socialLinks = [
 ] satisfies { label: string; platform: SocialPlatform; href: string }[];
 
 /** Render shared footer navigation with readable contrast on its dark surface. */
-export default function SiteFooter() {
+export default function SiteFooter({ photoCredit = false }: { photoCredit?: boolean }) {
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
@@ -41,11 +41,13 @@ export default function SiteFooter() {
             <Link href="/#approach">Approach</Link>
             <Link href="/price-calculator">Pricing</Link>
             <Link href="/team">Team</Link>
+            <Link href="/careers">Careers</Link>
             <Link href="/#contact">Contact</Link>
           </nav>
         </div>
         <div className={styles.bottom}>
           <span>© 2026 HOMLIV. ALL RIGHTS RESERVED.</span>
+          {photoCredit && <a href="https://unsplash.com/">Photography via Unsplash</a>}
           <a href="#top">BACK TO TOP ↑</a>
         </div>
       </div>

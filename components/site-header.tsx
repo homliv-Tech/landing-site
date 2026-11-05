@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-type CurrentPage = "home" | "pricing" | "team";
+type CurrentPage = "home" | "pricing" | "team" | "careers";
 
 type SiteHeaderProps = {
   current?: CurrentPage;
@@ -17,6 +17,7 @@ const links: { id: CurrentPage | "contact"; label: string; href: string }[] = [
   { id: "home", label: "Approach", href: "/#approach" },
   { id: "pricing", label: "Pricing", href: "/price-calculator" },
   { id: "team", label: "Team", href: "/team" },
+  { id: "careers", label: "Careers", href: "/careers" },
   { id: "contact", label: "Contact", href: "/#contact" },
 ];
 
