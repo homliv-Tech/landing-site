@@ -61,4 +61,8 @@ export function getProject(slug: string) {
   return projects.find((project) => project.slug === slug);
 }
 
-export const inspirationOnly = projects.every((project) => project.inspiration);
+/** Classify the entries a section actually displays, including filtered subsets. */
+export function getProjectCollectionKind(collection: readonly Project[]) {
+  if (!collection.some((project) => project.inspiration)) return "projects";
+  return collection.every((project) => project.inspiration) ? "inspiration" : "mixed";
+}
