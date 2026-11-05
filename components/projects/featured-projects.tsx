@@ -2,7 +2,6 @@ import Link from "next/link";
 import { inspirationOnly, projects } from "@/lib/projects";
 import { ProjectCard } from "./project-card";
 import styles from "./projects.module.css";
-import "./motion.css";
 
 export default function FeaturedProjects() {
   const featured = projects.filter((project) => project.featured).slice(0, 2);

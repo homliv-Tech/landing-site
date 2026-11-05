@@ -6,7 +6,7 @@ import styles from "./projects.module.css";
 export function ProjectCard({ project, index, eager = false, wide = false }: { project: Project; index: number; eager?: boolean; wide?: boolean }) {
   const cover = project.photos[0];
   return (
-    <Link className={`${styles.card} m-zoom`} href={`/projects/${project.slug}`} aria-label={`View ${project.title}`}>
+    <Link className={`${styles.card} ${styles.zoom}`} href={`/projects/${project.slug}`} aria-label={`View ${project.title}`}>
       <div className={styles.cardHeading}>
         <span className={styles.number}>{String(index + 1).padStart(2, "0")}</span>
         <div><span className={styles.category}>{project.category}</span><h3>{project.title}</h3></div>

@@ -6,7 +6,6 @@ import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import { projects, getProject, projectPhotoUrl } from "@/lib/projects";
 import styles from "@/components/projects/projects.module.css";
-import "@/components/projects/motion.css";
 
 type Props = { params: Promise<{ slug: string }> };
 export function generateStaticParams() { return projects.map(({ slug }) => ({ slug })); }
@@ -27,7 +26,7 @@ export default async function ProjectPage({ params }: Props) {
           <div className={styles.detailHeading}><div><p className={styles.eyebrow}>{project.inspiration ? "Design inspiration" : project.category}</p><h1>{project.title}</h1></div><div><p>{project.description}</p><dl className={styles.facts}><div><dt>Space</dt><dd>{project.category}</dd></div>{project.location && <div><dt>Location</dt><dd>{project.location}</dd></div>}{project.year && <div><dt>Year</dt><dd>{project.year}</dd></div>}<div><dt>Gallery</dt><dd>{String(project.photos.length).padStart(2, "0")} photographs</dd></div></dl></div></div>
         </div></section>
         <section className={styles.gallery} aria-label={`${project.title} photo gallery`}><div className={`${styles.wrap} ${styles.photoBento}`}>
-          {project.photos.map((photo, index) => <a className={`${styles.galleryPhoto} m-zoom`} key={projectPhotoUrl(photo)} href={projectPhotoUrl(photo)} target="_blank" rel="noopener noreferrer" aria-label={`Open photograph ${index + 1}: ${photo.alt} (new tab)`}><Image src={projectPhotoUrl(photo)} alt={photo.alt} width={photo.width} height={photo.height} sizes="(max-width: 639px) 88vw, 60vw" preload={index === 0} /></a>)}
+          {project.photos.map((photo, index) => <a className={`${styles.galleryPhoto} ${styles.zoom}`} key={projectPhotoUrl(photo)} href={projectPhotoUrl(photo)} target="_blank" rel="noopener noreferrer" aria-label={`Open photograph ${index + 1}: ${photo.alt} (new tab)`}><Image src={projectPhotoUrl(photo)} alt={photo.alt} width={photo.width} height={photo.height} sizes="(max-width: 639px) 88vw, 60vw" preload={index === 0} /></a>)}
         </div></section>
         {projects.length > 1 && <section className={styles.next}><div className={styles.wrap}><p className={styles.eyebrow}>Next {next.inspiration ? "collection" : "project"}</p><Link href={`/projects/${next.slug}`}>{next.title}<span aria-hidden="true">↗</span></Link><Link className={styles.textLink} href="/#contact" data-enquiry-location="project_close">Start your project<span aria-hidden="true">↗</span></Link></div></section>}
       </main>

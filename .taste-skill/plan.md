@@ -4,7 +4,7 @@ Projects hero: category and a photograph, split, 1 screen. Existing design-inspi
 Homepage featured work: heading and two equal photographic links, 1 screen desktop; stack naturally on phones.
 Projects index: category filters and complete collection links; content-driven to accommodate future projects.
 Project detail: introduction and ordered photo gallery; content-driven to support arbitrary photo counts and portrait photography.
-Existing navigation/footer reused. Kit motion CSS copied intact for linked photograph zooms.
+Existing navigation/footer reused. Project photograph zooms and card lifts are scoped in projects.module.css; shared controls use app/globals.css.
 No prices, dates, addresses or project facts invented. Existing three inspiration titles retained, with four Unsplash frames stored locally; replace with approved project names and R2 photos when supplied.
 
 Validation notes:
@@ -25,3 +25,5 @@ Validation notes:
 Bento refinement (user request): homepage now features up to three projects in a 7/5-column composition, with the lead card spanning two rows. The project index repeats the pattern and closes incomplete groups without holes. Project detail galleries use the same mixed-size grid, with full-size image links and natural photo proportions on phones. This user-requested composition supersedes the initial equal-card plan. No new assets, invented project facts or Next.js feedback candidates.
 
 Scope correction: user excluded the homepage from the bento change. Homepage restored to its prior two equal photographic cards and section sizing. Only the project index and detail galleries use bento layouts. Category filtering tests, TypeScript and ESLint pass; desktop and phone project screenshots reviewed. Feedback reporting pass: no qualifying Next.js candidates.
+
+Motion isolation correction: removed the copied global motion.css and every import and m-zoom hook. Image zoom now uses the CSS Module zoom class, including reduced-motion handling. Removed the obsolete root data-motion attribute and unused --bg/--action aliases. Undeclared --line-strong, --r-btn and --action-ink references disappeared with the unused generic controls; existing --ink and --card definitions remain untouched. No site-wide motion rules were added. Next.js feedback reporting pass: no qualifying candidates.
