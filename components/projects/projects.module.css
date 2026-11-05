@@ -28,6 +28,7 @@
 .heroText > p:not(.eyebrow) { max-width: 350px; }
 .heroText .textLink { margin-top: auto; min-width: 240px; }
 .heroImage { display: block; position: relative; overflow: hidden; background: var(--beige); }
+.heroImageLabel { position: absolute; top: 16px; left: 16px; z-index: 1; padding: 8px 12px; background: var(--paper); color: var(--ink); font-size: 13px; font-weight: 500; line-height: 1.5; }
 .index { padding-block: 96px; background: var(--beige-light); }
 .indexHeading { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; }
 .indexHeading h2 { font-size: clamp(32px, 3vw, 44px); font-weight: 400; margin: 0; letter-spacing: -.03em; }

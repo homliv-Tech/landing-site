@@ -64,6 +64,27 @@ test.each([
   });
 });
 
+test.each([
+  ["inspiration-only", [inspiration], true],
+  ["mixed, inspiration first", [inspiration, approved], true],
+  ["mixed, approved first", [approved, inspiration], false],
+  ["approved-only", [approved], false],
+])("hero photo label follows its own project in a %s catalogue", (_name, entries, isInspiration) => {
+  withCatalogue(entries, () => {
+    const container = document.createElement("div");
+    container.innerHTML = renderToStaticMarkup(createElement(ProjectsPage));
+    const link = container.querySelector('section[aria-labelledby="projects-heading"] a[href^="/projects/"]');
+    expect(link.getAttribute("href")).toBe(`/projects/${entries[0].slug}`);
+    if (isInspiration) {
+      expect(link.textContent).toContain("Design inspiration");
+      expect(link.getAttribute("aria-label")).toContain("design inspiration");
+    } else {
+      expect(link.textContent).not.toContain("Design inspiration");
+      expect(link.getAttribute("aria-label")).not.toContain("design inspiration");
+    }
+  });
+});
+
 test("an approved entry outside the featured selection cannot relabel inspiration as Homliv work", () => {
   for (const featured of [false, true]) {
     withCatalogue([inspiration, { ...inspiration, slug: "other-inspiration" }, { ...approved, featured }], () => {

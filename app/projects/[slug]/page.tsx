@@ -28,7 +28,12 @@ export default async function ProjectPage({ params }: Props) {
         <section className={styles.gallery} aria-label={`${project.title} photo gallery`}><div className={`${styles.wrap} ${styles.photoBento}`}>
           {project.photos.map((photo, index) => <a className={`${styles.galleryPhoto} ${styles.zoom}`} key={projectPhotoUrl(photo)} href={projectPhotoUrl(photo)} target="_blank" rel="noopener noreferrer" aria-label={`Open photograph ${index + 1}: ${photo.alt} (new tab)`}><Image src={projectPhotoUrl(photo)} alt={photo.alt} width={photo.width} height={photo.height} sizes="(max-width: 639px) 88vw, 60vw" preload={index === 0} /></a>)}
         </div></section>
-        {projects.length > 1 && <section className={styles.next}><div className={styles.wrap}><p className={styles.eyebrow}>Next {next.inspiration ? "collection" : "project"}</p><Link href={`/projects/${next.slug}`}>{next.title}<span aria-hidden="true">↗</span></Link><Link className={styles.textLink} href="/#contact" data-enquiry-location="project_close">Start your project<span aria-hidden="true">↗</span></Link></div></section>}
+        <section className={styles.next}>
+          <div className={styles.wrap}>
+            {projects.length > 1 && <><p className={styles.eyebrow}>Next {next.inspiration ? "collection" : "project"}</p><Link href={`/projects/${next.slug}`}>{next.title}<span aria-hidden="true">↗</span></Link></>}
+            <Link className={styles.textLink} href="/#contact" data-enquiry-location="project_close">Start your project<span aria-hidden="true">↗</span></Link>
+          </div>
+        </section>
       </main>
       <SiteFooter photoCredit={project.inspiration} />
     </div>
