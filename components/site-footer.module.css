@@ -1,0 +1,133 @@
+.footer {
+  padding: 64px 6% 24px;
+  background: var(--charcoal);
+  color: var(--ivory);
+}
+
+.inner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 36px;
+  padding-bottom: 44px;
+}
+
+.brand {
+  min-width: 0;
+}
+
+.wordmark {
+  display: inline-block;
+  color: var(--sun);
+  font-size: clamp(64px, 8vw, 100px);
+  letter-spacing: -.08em;
+  line-height: 1;
+}
+
+.tagline {
+  margin: 18px 0 22px;
+  color: #d2cfc4;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.socialLink {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid #8e978a;
+  border-radius: 50%;
+  color: var(--ivory);
+  transition: color .2s ease, background-color .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.socialLink svg {
+  width: 18px;
+  height: 18px;
+}
+
+.socialLink:hover {
+  border-color: var(--sun);
+  background: var(--sun);
+  color: var(--charcoal);
+  transform: translateY(-2px);
+}
+
+.navigation {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  gap: 2px 32px;
+  font-size: 15px;
+}
+
+.navigation a {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  transition: color .2s ease;
+}
+
+.navigation a:hover {
+  color: var(--mint);
+}
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
+  border-top: 1px solid #ffffff26;
+  padding-top: 18px;
+  color: #c9c4b8;
+  font-size: 10px;
+  letter-spacing: .09em;
+  line-height: 1.6;
+}
+
+.bottom a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+}
+
+.footer a:focus-visible {
+  outline: 2px solid var(--mint);
+  outline-offset: 4px;
+}
+
+@media (min-width: 701px) {
+  .main {
+    grid-template-columns: minmax(0, 1fr) minmax(260px, .65fr);
+    gap: clamp(40px, 8vw, 140px);
+    align-items: start;
+  }
+
+  .navigation {
+    gap: 8px 32px;
+    padding-top: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .socialLink,
+  .navigation a {
+    transition: none;
+  }
+
+  .socialLink:hover {
+    transform: none;
+  }
+}
