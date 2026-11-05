@@ -12,8 +12,8 @@ individual stages.
 - `journey-explorer.tsx` renders one ordered list of shadcn buttons. One shared
   shadcn popover previews each step after 200 ms of mouse hover. It remains
   open while the pointer is over the step or its details, with a 150 ms close
-  delay for moving between them. Tab focus also previews a step; Enter, Space
-  and touch taps continue to work. Escape, the close button or a click outside
+  delay for moving between them. Keyboard focus immediately previews a step;
+  Enter, Space and touch taps continue to work. Escape, the close button or a click outside
   dismisses the preview. Hover previews do not move focus. Tab previews keep
   focus on the step; touch taps move focus into the details.
 - `flow-layout.ts` positions the connected steps in alternating rows: three

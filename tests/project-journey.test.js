@@ -72,6 +72,44 @@ test("Tab focus previews a step, Escape dismisses it, and Enter still opens it",
   await screen.findByRole("dialog", { name: journeyStages[1].title });
 });
 
+test("keyboard focus opens the matching preview before Tab is released", async () => {
+  const user = userEvent.setup();
+  render(createElement(JourneyExplorer, { stages: journeyStages }));
+  const first = screen.getByRole("button", { name: `Step 1: ${journeyStages[0].title}` });
+  await user.keyboard("{Tab>}");
+  expect(document.activeElement === first).toBe(true);
+  expect(first.getAttribute("aria-expanded")).toBe("true");
+  await user.keyboard("{/Tab}");
+});
+
+test("a pending hover cannot replace the step reached by keyboard focus", async () => {
+  const user = userEvent.setup();
+  render(createElement(JourneyExplorer, { stages: journeyStages }));
+  const first = screen.getByRole("button", { name: `Step 1: ${journeyStages[0].title}` });
+  const second = screen.getByRole("button", { name: `Step 2: ${journeyStages[1].title}` });
+  await user.hover(second);
+  await user.keyboard("{Tab>}");
+  await act(async () => { await new Promise((resolve) => setTimeout(resolve, 250)); });
+  expect(document.activeElement === first).toBe(true);
+  expect(first.getAttribute("aria-expanded")).toBe("true");
+  expect(second.getAttribute("aria-expanded")).toBe("false");
+  await user.keyboard("{/Tab}");
+});
+
+test("closing details with the keyboard does not reopen them when focus returns", async () => {
+  const user = userEvent.setup();
+  render(createElement(JourneyExplorer, { stages: journeyStages }));
+  const first = screen.getByRole("button", { name: `Step 1: ${journeyStages[0].title}` });
+  await user.tab();
+  const details = await screen.findByRole("dialog", { name: journeyStages[0].title });
+  const close = within(details).getByRole("button", { name: "Close step details" });
+  await user.tab();
+  expect(document.activeElement === close).toBe(true);
+  await user.keyboard("{Enter}");
+  await waitFor(() => expect(screen.queryByRole("dialog") === null).toBe(true));
+  await waitFor(() => expect(document.activeElement === first).toBe(true));
+});
+
 test("touch users can explore an added stage without changing the component", async () => {
   const user = userEvent.setup();
   const extra = { ...journeyStages[0], id: "aftercare", title: "Aftercare", description: "Support after handover." };

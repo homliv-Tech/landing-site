@@ -10,7 +10,7 @@ import {
   Plus,
   SwatchBook,
 } from "lucide-react";
-import { useMemo, useState, type CSSProperties } from "react";
+import { useId, useMemo, useRef, useState, type CSSProperties } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger, createPopoverHandle } from "@/components/ui/popover";
 import { getFlowPosition } from "./flow-layout";
@@ -38,7 +38,11 @@ type JourneySelection = {
  * Tab previews retain focus on their step; touch activation focuses the details.
  */
 export function JourneyExplorer({ stages }: { stages: JourneyStage[] }) {
+  const journeyId = useId();
   const [previewHandle] = useState(() => createPopoverHandle<JourneySelection>());
+  const pointerFocusTarget = useRef<HTMLElement | null>(null);
+  const keyboardPreviewTarget = useRef<HTMLElement | null>(null);
+  const restoredFocusTarget = useRef<HTMLElement | null>(null);
   // The shared popover tracks payload identity while switching between triggers.
   const selections = useMemo(
     () => stages.map((stage, index) => ({ stage, index, total: stages.length })),
@@ -56,7 +60,17 @@ export function JourneyExplorer({ stages }: { stages: JourneyStage[] }) {
         </span>
       </div>
 
-      <Popover<JourneySelection> handle={previewHandle}>
+      <Popover<JourneySelection>
+        handle={previewHandle}
+        onOpenChange={(open, details) => {
+          // An older hover timer must not replace a newer keyboard selection.
+          const keyboardTarget = keyboardPreviewTarget.current;
+          if (open && details.reason === "trigger-hover" && keyboardTarget &&
+            document.activeElement === keyboardTarget && details.trigger !== keyboardTarget) {
+            details.cancel();
+          }
+        }}
+      >
         {({ payload }) => (
           <>
             <ol className={styles.flowChart} aria-label="Homliv’s 60-day project process">
@@ -82,14 +96,42 @@ export function JourneyExplorer({ stages }: { stages: JourneyStage[] }) {
                     } as CSSProperties}
                   >
                     <PopoverTrigger
+                      id={`${journeyId}-${stage.id}`}
                       handle={previewHandle}
                       payload={selection}
                       openOnHover
                       delay={200}
                       closeDelay={150}
-                      onKeyUp={(event) => {
-                        // Tab previews the step without moving focus into its details.
-                        if (event.key === "Tab") previewHandle.open(event.currentTarget.id);
+                      onPointerEnter={() => { keyboardPreviewTarget.current = null; }}
+                      onPointerMove={() => { keyboardPreviewTarget.current = null; }}
+                      onPointerDown={(event) => {
+                        keyboardPreviewTarget.current = null;
+                        pointerFocusTarget.current = event.currentTarget;
+                      }}
+                      onMouseDown={(event) => {
+                        keyboardPreviewTarget.current = null;
+                        pointerFocusTarget.current = event.currentTarget;
+                      }}
+                      onBlur={(event) => {
+                        if (pointerFocusTarget.current === event.currentTarget) pointerFocusTarget.current = null;
+                      }}
+                      onFocus={(event) => {
+                        // Dismissal returns focus without reopening the preview.
+                        if (restoredFocusTarget.current === event.currentTarget) {
+                          restoredFocusTarget.current = null;
+                          return;
+                        }
+                        // Pointer activation is handled by the popover's native press behavior.
+                        if (pointerFocusTarget.current === event.currentTarget) {
+                          pointerFocusTarget.current = null;
+                          return;
+                        }
+                        const returningFromDetails = event.relatedTarget instanceof Element &&
+                          event.relatedTarget.closest('[data-slot="popover-content"]');
+                        if (!returningFromDetails && event.currentTarget.matches(":focus-visible")) {
+                          keyboardPreviewTarget.current = event.currentTarget;
+                          previewHandle.open(event.currentTarget.id);
+                        }
                       }}
                       aria-label={`Step ${index + 1}: ${stage.title}`}
                       render={<Button variant="ghost" className={styles.flowButton} />}
@@ -115,6 +157,11 @@ export function JourneyExplorer({ stages }: { stages: JourneyStage[] }) {
             <PopoverContent
               className={styles.stepPopover}
               initialFocus={(interactionType) => interactionType === "touch"}
+              finalFocus={() => {
+                const trigger = payload ? document.getElementById(`${journeyId}-${payload.stage.id}`) : null;
+                if (trigger && document.activeElement !== trigger) restoredFocusTarget.current = trigger;
+                return trigger ?? true;
+              }}
             >
               {payload && <JourneyDetail {...payload} />}
             </PopoverContent>
