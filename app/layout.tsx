@@ -12,11 +12,12 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   title: "Homliv | Thoughtful architecture, made for living",
   description: "Considered architecture for the way you live, delivered within 60 days.",
+  other: { "page-type": "service", "site-kind": "other" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" data-type="service" data-scroll-behavior="smooth" className={dmSans.variable}>
+    <html data-type="service" data-motion="live" lang="en" data-scroll-behavior="smooth" className={dmSans.variable}>
       <body>
         <Analytics />
         {children}
