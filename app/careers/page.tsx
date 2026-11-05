@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
-import "./motion.css";
 import styles from "./careers.module.css";
 
 export const metadata: Metadata = {
@@ -25,9 +24,9 @@ export default function CareersPage() {
               <p className={styles.eyebrow}>Careers at Homliv</p>
               <h1 id="careers-heading">Careers in<br />thoughtful design.</h1>
               <p className={`${styles.lead} hero__lead`}>We design thoughtful homes around the people who live in them.</p>
-              <Link href="/team" className={`${styles.teamLink} btn btn--primary`}>
+              <Link href="/team" className={styles.teamLink}>
                 Meet the team
-                <svg className="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path className="m-arrow__stem" d="M1 6h9" /><path className="m-arrow__head" d="m6 2 4 4-4 4" /></svg>
+                <svg className={styles.arrow} viewBox="0 0 12 12" aria-hidden="true"><path className={styles.arrowStem} d="M1 6h9" /><path className={styles.arrowHead} d="m6 2 4 4-4 4" /></svg>
               </Link>
               <div className={styles.openings}>
                 <div className={styles.statusLine}><span className={styles.statusDot} aria-hidden="true" />Hiring update</div>
@@ -41,7 +40,7 @@ export default function CareersPage() {
                 src="/images/careers/interior.webp"
                 alt="A sunlit living room with natural materials, warm wood and generous windows"
                 fill
-                priority
+                preload
                 sizes="100vw"
                 data-source="Unsplash"
                 data-subject="architectural interior inspiration"
