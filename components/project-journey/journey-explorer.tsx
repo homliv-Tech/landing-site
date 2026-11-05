@@ -43,6 +43,7 @@ export function JourneyExplorer({ stages }: { stages: JourneyStage[] }) {
   const pointerFocusTarget = useRef<HTMLElement | null>(null);
   const keyboardPreviewTarget = useRef<HTMLElement | null>(null);
   const restoredFocusTarget = useRef<HTMLElement | null>(null);
+  const keepOutsideFocus = useRef(false);
   // The shared popover tracks payload identity while switching between triggers.
   const selections = useMemo(
     () => stages.map((stage, index) => ({ stage, index, total: stages.length })),
@@ -63,6 +64,12 @@ export function JourneyExplorer({ stages }: { stages: JourneyStage[] }) {
       <Popover<JourneySelection>
         handle={previewHandle}
         onOpenChange={(open, details) => {
+          if (open) {
+            // Hover previews may close without running the focus manager.
+            keepOutsideFocus.current = false;
+          } else {
+            keepOutsideFocus.current = details.reason === "outside-press" || details.reason === "focus-out";
+          }
           // An older hover timer must not replace a newer keyboard selection.
           const keyboardTarget = keyboardPreviewTarget.current;
           if (open && details.reason === "trigger-hover" && keyboardTarget &&
@@ -103,7 +110,6 @@ export function JourneyExplorer({ stages }: { stages: JourneyStage[] }) {
                       delay={200}
                       closeDelay={150}
                       onPointerEnter={() => { keyboardPreviewTarget.current = null; }}
-                      onPointerMove={() => { keyboardPreviewTarget.current = null; }}
                       onPointerDown={(event) => {
                         keyboardPreviewTarget.current = null;
                         pointerFocusTarget.current = event.currentTarget;
@@ -158,6 +164,8 @@ export function JourneyExplorer({ stages }: { stages: JourneyStage[] }) {
               className={styles.stepPopover}
               initialFocus={(interactionType) => interactionType === "touch"}
               finalFocus={() => {
+                // Let the pressed link or form control keep focus after dismissal.
+                if (keepOutsideFocus.current) return false;
                 const trigger = payload ? document.getElementById(`${journeyId}-${payload.stage.id}`) : null;
                 if (trigger && document.activeElement !== trigger) restoredFocusTarget.current = trigger;
                 return trigger ?? true;

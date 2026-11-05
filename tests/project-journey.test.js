@@ -1,12 +1,27 @@
-import { afterEach, expect, test } from "bun:test";
+import { afterEach, expect, spyOn, test } from "bun:test";
 import { act, createElement } from "react";
-import { cleanup, render, screen, waitFor, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { JourneyExplorer } from "../components/project-journey/journey-explorer";
 import { getFlowPosition } from "../components/project-journey/flow-layout";
 import { journeyStages } from "../components/project-journey/journey-stages";
 
-afterEach(cleanup);
+let focusSpy;
+
+afterEach(() => {
+  cleanup();
+  focusSpy?.mockRestore();
+  focusSpy = undefined;
+});
+
+function supportPreventScroll() {
+  const focus = HTMLElement.prototype.focus;
+  // Happy DOM does not read focus options; emulate browsers supporting preventScroll.
+  focusSpy = spyOn(HTMLElement.prototype, "focus").mockImplementation(function (options) {
+    void options?.preventScroll;
+    focus.call(this, options);
+  });
+}
 
 test("hover previews wait briefly, stay open over the details and close on leaving", async () => {
   const user = userEvent.setup();
@@ -82,18 +97,63 @@ test("keyboard focus opens the matching preview before Tab is released", async (
   await user.keyboard("{/Tab}");
 });
 
-test("a pending hover cannot replace the step reached by keyboard focus", async () => {
+test("pointer movement within a pending hover cannot replace keyboard focus", async () => {
   const user = userEvent.setup();
   render(createElement(JourneyExplorer, { stages: journeyStages }));
   const first = screen.getByRole("button", { name: `Step 1: ${journeyStages[0].title}` });
   const second = screen.getByRole("button", { name: `Step 2: ${journeyStages[1].title}` });
   await user.hover(second);
   await user.keyboard("{Tab>}");
+  fireEvent.pointerMove(second, { pointerType: "mouse", clientX: 1, clientY: 1 });
   await act(async () => { await new Promise((resolve) => setTimeout(resolve, 250)); });
   expect(document.activeElement === first).toBe(true);
   expect(first.getAttribute("aria-expanded")).toBe("true");
   expect(second.getAttribute("aria-expanded")).toBe("false");
   await user.keyboard("{/Tab}");
+});
+
+test("pressing an outside form field preserves focus on that field", async () => {
+  supportPreventScroll();
+  const user = userEvent.setup();
+  render(createElement("div", null,
+    createElement(JourneyExplorer, { stages: journeyStages }),
+    createElement("input", { "aria-label": "Contact name" }),
+  ));
+  await user.tab();
+  const details = await screen.findByRole("dialog", { name: journeyStages[0].title });
+  await user.tab();
+  expect(document.activeElement === within(details).getByRole("button", { name: "Close step details" })).toBe(true);
+  const contact = screen.getByRole("textbox", { name: "Contact name" });
+  await user.click(contact);
+  await waitFor(() => expect(screen.queryByRole("dialog") === null).toBe(true));
+  expect(document.activeElement === contact).toBe(true);
+
+  const first = screen.getByRole("button", { name: `Step 1: ${journeyStages[0].title}` });
+  await act(async () => { first.focus(); });
+  await screen.findByRole("dialog", { name: journeyStages[0].title });
+});
+
+test("outside-dismissed hover does not prevent focus restoration on a later preview", async () => {
+  supportPreventScroll();
+  const user = userEvent.setup();
+  render(createElement("div", null,
+    createElement(JourneyExplorer, { stages: journeyStages }),
+    createElement("input", { "aria-label": "Contact name" }),
+  ));
+  const first = screen.getByRole("button", { name: `Step 1: ${journeyStages[0].title}` });
+  await user.hover(first);
+  await screen.findByRole("dialog", { name: journeyStages[0].title });
+  const contact = screen.getByRole("textbox", { name: "Contact name" });
+  await user.click(contact);
+  await waitFor(() => expect(screen.queryByRole("dialog") === null).toBe(true));
+  const last = screen.getByRole("button", { name: `Step ${journeyStages.length}: ${journeyStages.at(-1).title}` });
+  await act(async () => { last.focus(); });
+  expect(document.activeElement === last).toBe(true);
+  await screen.findByRole("dialog", { name: journeyStages.at(-1).title });
+  await user.tab();
+  await user.keyboard("{Enter}");
+  await waitFor(() => expect(screen.queryByRole("dialog") === null).toBe(true));
+  await waitFor(() => expect(document.activeElement === last).toBe(true));
 });
 
 test("closing details with the keyboard does not reopen them when focus returns", async () => {
