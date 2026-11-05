@@ -17,6 +17,11 @@ function PopoverClose(props: PopoverPrimitive.Close.Props) {
 type PopoverContentProps = PopoverPrimitive.Popup.Props &
   Pick<PopoverPrimitive.Positioner.Props, "align" | "side" | "sideOffset" | "collisionPadding">;
 
+/**
+ * Portal a popup beside its trigger with viewport collision handling.
+ * Placement props configure the positioner; remaining props control the popup,
+ * including its focus behavior and accessibility attributes.
+ */
 function PopoverContent({
   className,
   align = "center",

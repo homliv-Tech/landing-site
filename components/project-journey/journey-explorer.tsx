@@ -33,6 +33,10 @@ type JourneySelection = {
   total: number;
 };
 
+/**
+ * Render ordered process steps with a shared hover, keyboard and touch preview.
+ * Tab previews retain focus on their step; touch activation focuses the details.
+ */
 export function JourneyExplorer({ stages }: { stages: JourneyStage[] }) {
   const [previewHandle] = useState(() => createPopoverHandle<JourneySelection>());
   // The shared popover tracks payload identity while switching between triggers.
