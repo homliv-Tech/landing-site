@@ -4,6 +4,7 @@ import SiteHeader from "@/components/site-header";
 import TextPreloader from "@/components/prsui/text-preloader";
 import ConsultationForm from "@/components/consultation-form";
 import { ProjectJourney } from "@/components/project-journey/project-journey";
+import VerticalCutReveal from "@/components/fancy/text/vertical-cut-reveal";
 
 const Arrow = () => <span aria-hidden="true">↗</span>;
 
@@ -15,7 +16,7 @@ export default function Home() {
 
         <section className="hero" data-analytics-section="hero">
           <div className="hero-overlay" />
-          <div className="hero-content"><p className="eyebrow">HOMLIV / ARCHITECTURAL DESIGN</p><h1>Thoughtful homes,<br />beautifully lived in.</h1><p className="hero-sub">Architectural design delivered within 60 days.</p></div>
+          <div className="hero-content"><p className="eyebrow">HOMLIV / ARCHITECTURAL DESIGN</p><h1><VerticalCutReveal lines={["Thoughtful homes,", "beautifully lived in."]} /></h1><p className="hero-sub">Architectural design delivered within 60 days.</p></div>
           <a href="#studio" className="hero-scroll">SCROLL TO EXPLORE <span>↓</span></a>
           <span className="hero-side">DESIGNED FOR THE WAY YOU LIVE</span>
         </section>
