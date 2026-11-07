@@ -13,7 +13,7 @@ export function ProjectCard({ project, index, eager = false, wide = false }: { p
         <span className={styles.cardArrow} aria-hidden="true">↗</span>
       </div>
       <div className={styles.cardImage}>
-        <Image src={projectPhotoUrl(cover)} alt={cover.alt} width={cover.width} height={cover.height} sizes={wide ? "88vw" : "(max-width: 639px) 88vw, 44vw"} preload={eager} />
+        <Image unoptimized referrerPolicy="no-referrer" src={projectPhotoUrl(cover)} alt={cover.alt} width={cover.width} height={cover.height} sizes={wide ? "88vw" : "(max-width: 639px) 88vw, 44vw"} preload={eager} />
       </div>
     </Link>
   );

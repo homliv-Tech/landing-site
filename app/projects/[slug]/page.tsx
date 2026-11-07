@@ -26,7 +26,40 @@ export default async function ProjectPage({ params }: Props) {
           <div className={styles.detailHeading}><div><p className={styles.eyebrow}>{project.inspiration ? "Design inspiration" : project.category}</p><h1>{project.title}</h1></div><div><p>{project.description}</p><dl className={styles.facts}><div><dt>Space</dt><dd>{project.category}</dd></div>{project.location && <div><dt>Location</dt><dd>{project.location}</dd></div>}{project.year && <div><dt>Year</dt><dd>{project.year}</dd></div>}<div><dt>Gallery</dt><dd>{String(project.photos.length).padStart(2, "0")} images</dd></div></dl></div></div>
         </div></section>
         <section className={styles.gallery} aria-label={`${project.title} photo gallery`}><div className={`${styles.wrap} ${styles.photoBento}`}>
-          {project.photos.map((photo, index) => <a className={`${styles.galleryPhoto} ${styles.zoom}`} key={projectPhotoUrl(photo)} href={projectPhotoUrl(photo)} target="_blank" rel="noopener noreferrer" aria-label={`Open image ${index + 1}: ${photo.alt} (new tab)`}><Image src={projectPhotoUrl(photo)} alt={photo.alt} width={photo.width} height={photo.height} sizes="(max-width: 639px) 88vw, 60vw" preload={index === 0} /></a>)}
+          {project.photos.map((photo, index) => {
+            const crop = photo.crop;
+            return (
+              <a
+                className={`${styles.galleryPhoto} ${styles.zoom}`}
+                key={projectPhotoUrl(photo)}
+                href={projectPhotoUrl(photo)}
+                target="_blank"
+                rel="noopener noreferrer"
+                referrerPolicy="no-referrer"
+                aria-label={`Open image ${index + 1}: ${photo.alt} (new tab)`}
+                style={crop ? { position: "relative", aspectRatio: `${crop.width} / ${crop.height}` } : undefined}
+              >
+                <Image
+                  unoptimized
+                  referrerPolicy="no-referrer"
+                  src={projectPhotoUrl(photo)}
+                  alt={photo.alt}
+                  width={photo.width}
+                  height={photo.height}
+                  sizes="(max-width: 639px) 88vw, 60vw"
+                  preload={index === 0}
+                  style={crop ? {
+                    position: "absolute",
+                    maxWidth: "none",
+                    width: `${photo.width / crop.width * 100}%`,
+                    height: "auto",
+                    left: `${-crop.left / crop.width * 100}%`,
+                    top: `${-crop.top / crop.height * 100}%`,
+                  } : undefined}
+                />
+              </a>
+            );
+          })}
         </div></section>
         <section className={styles.next}>
           <div className={styles.wrap}>

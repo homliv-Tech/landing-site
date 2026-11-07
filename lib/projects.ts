@@ -1,6 +1,8 @@
 import { assetUrl } from "@/lib/assets";
 
 export type ProjectPhoto = {
+  /** Content rectangle for source files exported with white page margins. */
+  crop?: { left: number; top: number; width: number; height: number };
   alt: string;
   width: number;
   height: number;
@@ -33,10 +35,10 @@ export const projects: Project[] = [
       { objectKey: "images/portfolio/MAYUR/G-GP2.png", alt: "Bedroom with green bedcover, timber bedside tables and framed artwork", width: 2500, height: 1625 },
       { objectKey: "images/portfolio/MAYUR/G- GP1.png", alt: "Bedroom with timber headboard, green bedding and full-height curtains", width: 2000, height: 3400 },
       { objectKey: "images/portfolio/MAYUR/KB- 1.png", alt: "Washbasin nook with botanical wallpaper and a round mirror", width: 1500, height: 2250 },
-      { objectKey: "images/portfolio/MAYUR/f89f95ba-8b76-4323-9de2-f7576c5361ee-0007.png", alt: "Illuminated prayer alcove with a carved timber backdrop", width: 2479, height: 3508 },
-      { objectKey: "images/portfolio/MAYUR/f89f95ba-8b76-4323-9de2-f7576c5361ee-0009.png", alt: "Sunlit seating area with timber furniture and indoor plants", width: 3508, height: 2479 },
-      { objectKey: "images/portfolio/MAYUR/f89f95ba-8b76-4323-9de2-f7576c5361ee-0013.png", alt: "Decorative arched partition with coloured panels", width: 2479, height: 3508 },
-      { objectKey: "images/portfolio/MAYUR/f89f95ba-8b76-4323-9de2-f7576c5361ee-0015.png", alt: "Botanical washbasin nook beside an arched timber partition", width: 2479, height: 3508 },
+      { objectKey: "images/portfolio/MAYUR/f89f95ba-8b76-4323-9de2-f7576c5361ee-0007.png", alt: "Illuminated prayer alcove with a carved timber backdrop", width: 2479, height: 3508, crop: { left: 62, top: 99, width: 2355, height: 3309 } },
+      { objectKey: "images/portfolio/MAYUR/f89f95ba-8b76-4323-9de2-f7576c5361ee-0009.png", alt: "Sunlit seating area with timber furniture and indoor plants", width: 3508, height: 2479, crop: { left: 91, top: 62, width: 3327, height: 2354 } },
+      { objectKey: "images/portfolio/MAYUR/f89f95ba-8b76-4323-9de2-f7576c5361ee-0013.png", alt: "Decorative arched partition with coloured panels", width: 2479, height: 3508, crop: { left: 62, top: 282, width: 2355, height: 2943 } },
+      { objectKey: "images/portfolio/MAYUR/f89f95ba-8b76-4323-9de2-f7576c5361ee-0015.png", alt: "Botanical washbasin nook beside an arched timber partition", width: 2479, height: 3508, crop: { left: 62, top: 282, width: 2355, height: 2943 } },
     ],
   },
   {

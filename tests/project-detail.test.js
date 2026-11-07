@@ -14,6 +14,13 @@ test.each([
     const page = await ProjectPage({ params: Promise.resolve({ slug: projects[index].slug }) });
     const container = document.createElement("div");
     container.innerHTML = renderToStaticMarkup(page);
+    const images = container.querySelectorAll('section[aria-label$="photo gallery"] img');
+    expect(images.length).toBe(projects[index].photos.length);
+    for (const image of images) {
+      expect(image.getAttribute("referrerPolicy")).toBe("no-referrer");
+      expect(image.getAttribute("src")).toStartWith("https://assets.homliv.co.in/images/portfolio/");
+      expect(image.closest("a").getAttribute("referrerPolicy")).toBe("no-referrer");
+    }
     const closing = container.querySelector("main > section:last-child");
     const enquiries = closing.querySelectorAll('[data-enquiry-location="project_close"]');
     expect(enquiries.length).toBe(1);

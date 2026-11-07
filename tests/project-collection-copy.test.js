@@ -33,7 +33,7 @@ test.each([
     const image = hero.querySelector("img");
     const source = new URL(image.getAttribute("src"), "http://localhost");
     const cover = project.photos[0];
-    expect(source.searchParams.get("url")).toBe(projectPhotoUrl(cover));
+    expect(source.href).toBe(projectPhotoUrl(cover));
     expect(image.getAttribute("alt")).toBe(cover.alt);
     expect(image.getAttribute("width")).toBe(String(cover.width));
     expect(image.getAttribute("height")).toBe(String(cover.height));
