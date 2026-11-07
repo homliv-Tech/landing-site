@@ -290,6 +290,43 @@ h2 {
   font-size: 18px;
 }
 
+.cut-reveal-line {
+  display: block;
+}
+
+.cut-reveal-mask {
+  display: inline-block;
+  overflow: clip;
+  vertical-align: bottom;
+  /* Keep descenders inside the mask without changing the line spacing. */
+  padding-block: 0.12em;
+  margin-block: -0.12em;
+}
+
+.cut-reveal-word {
+  display: inline-block;
+  animation: hero-word-reveal 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(80ms + var(--word-index) * 100ms);
+}
+
+[data-preloader-active="true"] .cut-reveal-word {
+  animation: none;
+  transform: translateY(120%);
+}
+
+@keyframes hero-word-reveal {
+  from { transform: translateY(120%); }
+  to { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cut-reveal-word,
+  [data-preloader-active="true"] .cut-reveal-word {
+    animation: none;
+    transform: none;
+  }
+}
+
 .hero-scroll {
   position: absolute;
   right: 5%;
