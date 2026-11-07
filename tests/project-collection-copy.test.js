@@ -5,7 +5,7 @@ import FeaturedProjects from "../components/projects/featured-projects";
 import ProjectsPage from "../app/projects/page";
 import { projects, projectPhotoUrl } from "../lib/projects";
 
-const inspiration = projects[0];
+const inspiration = { ...projects[0], inspiration: true };
 const approved = {
   ...inspiration,
   slug: "approved-home", title: "Approved home", inspiration: false,

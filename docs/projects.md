@@ -6,13 +6,21 @@ are derived from it. Every project supports its own ordered array of photos.
 The first photo is the cover. `featured: true` includes it in the homepage's first
 two featured entries. Filters work without changing gallery order.
 
-The initial three entries retain the site's existing design-inspiration titles.
-They are **not completed Homliv projects**. Their locally stored Unsplash images
-are temporary references. Project detail pages for these entries have `noindex`.
-The interface labels them as design inspiration, with a single shared footer credit.
-Replace every inspiration entry before presenting the catalogue as Homliv's work.
+The catalogue contains five Homliv projects and 32 images hosted under
+`images/portfolio/` on `assets.homliv.co.in`:
 
-## Add real work when photos arrive
+- Mayur: 9 images (`MAYUR/`)
+- Shinde’s: 6 images (`SHINDE'S/`)
+- Shukla’s: 7 images (`SHUKLA'S/`)
+- Wada’s: 5 images (`WADA'S/`)
+- Yadav: 5 images (`YADAV/`)
+
+All five entries use the supplied project imagery rather than inspiration placeholders.
+The images include interior visualisations; no completion dates or locations are assumed.
+The homepage features the first two projects, and each project has its own full gallery.
+Image dimensions match the original PNGs, and descriptive alt text follows their contents.
+
+## Add or update projects
 
 Upload photographs to the R2 bucket connected to `assets.homliv.co.in`. The public
 custom domain is already allowlisted for Next Image. No R2 secrets are required
@@ -52,7 +60,6 @@ full version in a new tab. Mobile galleries retain the original photo proportion
 WebP/AVIF, around 1600–2400 px wide. Confirm each public asset URL returns an image,
 then rebuild/redeploy so static project routes and metadata update together.
 
-The local preview files are `public/project-inspiration/{living,interior,home,detail}.jpg`.
-Remove them, their catalogue entries, and the Unsplash footer credit once no page
-uses inspiration photography. The rest of the existing homepage also uses
-Unsplash images and must be considered before removing the shared credit.
+The legacy local preview files in `public/project-inspiration/` are no longer used
+by the project catalogue. Project pages omit the Unsplash credit for these supplied
+images. Other homepage sections still use Unsplash images and retain their credit.

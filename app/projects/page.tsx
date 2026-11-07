@@ -9,7 +9,7 @@ import styles from "@/components/projects/projects.module.css";
 
 export const metadata: Metadata = {
   title: "Projects | Homliv",
-  description: "Explore homes, interiors and design inspiration from Homliv. Open each collection to see every detail.",
+  description: "Explore Homliv’s residential interior projects, from living spaces and bedrooms to the details that make a home.",
 };
 
 export default function ProjectsPage() {
@@ -32,7 +32,7 @@ export default function ProjectsPage() {
         <ProjectIndex projects={projects} />
         <section className={styles.enquiry}><div className={styles.wrap}><p className={styles.eyebrow}>Your home, next</p><h2>A space of<br />your own.</h2><Link className={styles.textLink} href="/#contact" data-enquiry-location="projects_close">Start your project<span aria-hidden="true">↗</span></Link></div></section>
       </main>
-      <SiteFooter photoCredit />
+      <SiteFooter photoCredit={projects.some((project) => project.inspiration)} />
     </div>
   );
 }
