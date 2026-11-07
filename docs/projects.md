@@ -55,11 +55,18 @@ Add or replace an entry in `lib/projects.ts`, for example (use approved details)
 ```
 
 Use object keys, not full URLs, and set the actual image dimensions. The URL
-helper encodes spaces and other characters in each path segment. Desktop galleries use a bento grid with cropped frames; each image opens its
-full version in a new tab. Mobile galleries retain the original photo proportions. Prefer
+helper encodes spaces and other characters in each path segment. Project cards and galleries retain the original image proportions at every screen
+size. Images are served directly from R2 at their original resolution, with responsive
+CSS scaling and no Next Image resizing or recompression. Each gallery image also
+opens its full version in a new tab. Project images use `referrerPolicy="no-referrer"`
+to avoid asset-server hotlink rejection on local and preview domains. Prefer
 WebP/AVIF, around 1600–2400 px wide. Confirm each public asset URL returns an image,
 then rebuild/redeploy so static project routes and metadata update together.
 
 The legacy local preview files in `public/project-inspiration/` are no longer used
 by the project catalogue. Project pages omit the Unsplash credit for these supplied
 images. Other homepage sections still use Unsplash images and retain their credit.
+
+Four Mayur PNG exports include white page margins in their source pixels. Their
+`crop` rectangles hide only those margins in the gallery. The original R2 files
+and full-size image links remain intact; the visible content retains its proportions.
