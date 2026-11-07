@@ -65,15 +65,19 @@ test("successful and blocked rows are excluded even from legacy backfill", async
 });
 
 const originalFetch = globalThis.fetch;
+const originalEnabled = process.env.CRM_ENQUIRY_ENABLED;
 const originalUrl = process.env.CRM_ENQUIRY_URL;
 const originalSecret = process.env.CRM_ENQUIRY_SECRET;
 const companyId = "22222222-2222-4222-8222-222222222222";
 beforeEach(() => {
+  process.env.CRM_ENQUIRY_ENABLED = "true";
   process.env.CRM_ENQUIRY_URL = "https://crm.example/api/integrations/enquiries";
   process.env.CRM_ENQUIRY_SECRET = "s".repeat(32);
 });
 afterEach(() => {
   globalThis.fetch = originalFetch;
+  if (originalEnabled === undefined) delete process.env.CRM_ENQUIRY_ENABLED;
+  else process.env.CRM_ENQUIRY_ENABLED = originalEnabled;
   if (originalUrl === undefined) delete process.env.CRM_ENQUIRY_URL;
   else process.env.CRM_ENQUIRY_URL = originalUrl;
   if (originalSecret === undefined) delete process.env.CRM_ENQUIRY_SECRET;
@@ -174,3 +178,13 @@ test("a real delivery timeout commits a durable pending retry", async () => {
   expect(saved.crmNextAttemptAt.getTime()).toBeGreaterThan(Date.now());
   expect(saved.crmPayload.id).toBe(row.id);
 }, 15000);
+
+test("disabled CRM does not claim pending enquiries or make HTTP requests", async () => {
+  delete process.env.CRM_ENQUIRY_ENABLED;
+  globalThis.fetch = () => { throw new Error("CRM must not be contacted"); };
+  expect(await deliverCrmEnquiry({}, db)).toBe("disabled");
+  const [saved] = await db.select().from(enquiries);
+  expect(saved.crmAttempts).toBe(0);
+  expect(saved.crmDeliveredAt).toBeNull();
+  expect(saved.crmPayload).toBeNull();
+});
