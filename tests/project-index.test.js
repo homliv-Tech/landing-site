@@ -14,9 +14,10 @@ test("project filters restrict gallery links and All spaces restores every colle
     const filter = [...container.querySelectorAll("button")].find((button) => button.textContent === projects[0].category);
     await act(async () => filter.click());
     expect(filter.getAttribute("aria-pressed")).toBe("true");
-    expect(container.querySelectorAll('a[href^="/projects/"]').length).toBe(1);
+    const matching = projects.filter((project) => project.category === projects[0].category);
+    expect(container.querySelectorAll('a[href^="/projects/"]').length).toBe(matching.length);
     expect(container.querySelector('a[href^="/projects/"]').getAttribute("href")).toBe(`/projects/${projects[0].slug}`);
-    expect(container.querySelector('[aria-live="polite"]').textContent).toContain("01 collection");
+    expect(container.querySelector('[aria-live="polite"]').textContent).toBe(`${String(matching.length).padStart(2, "0")} ${matching.length === 1 ? "project" : "projects"}`);
     await act(async () => container.querySelector("button").click());
     expect(container.querySelectorAll('a[href^="/projects/"]').length).toBe(projects.length);
   } finally {
@@ -25,7 +26,8 @@ test("project filters restrict gallery links and All spaces restores every colle
   }
 });
 
-// Use an approved-project fixture alongside an existing inspiration collection.
+// Keep mixed-catalogue coverage independent of the live portfolio.
+const inspirationProject = { ...projects[0], category: "Design references", inspiration: true };
 const approved = {
   ...projects[0],
   slug: "approved-home", title: "Approved home", category: "Built homes",
@@ -38,7 +40,7 @@ test("mixed catalogue keeps inspiration labels and updates wording when filterin
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(createElement(ProjectIndex, { projects: [approved, projects[0]] })));
+    await act(async () => root.render(createElement(ProjectIndex, { projects: [approved, inspirationProject] })));
     expect(container.querySelector("h2").textContent).toBe("Projects and inspiration");
     expect(container.querySelector('[aria-live="polite"]').textContent).toBe("02 entries");
     const inspiration = container.querySelector(`a[href="/projects/${projects[0].slug}"]`);
@@ -52,7 +54,7 @@ test("mixed catalogue keeps inspiration labels and updates wording when filterin
     await act(async () => filter("Built homes").click());
     expect(container.querySelector("h2").textContent).toBe("All projects");
     expect(container.querySelector('[aria-live="polite"]').textContent).toBe("01 project");
-    await act(async () => filter(projects[0].category).click());
+    await act(async () => filter(inspirationProject.category).click());
     expect(container.querySelector("h2").textContent).toBe("The collections");
     expect(container.querySelector('[aria-live="polite"]').textContent).toBe("01 collection");
     await act(async () => filter("All spaces").click());
