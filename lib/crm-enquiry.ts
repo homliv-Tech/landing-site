@@ -15,6 +15,7 @@ export type CrmOutcome =
   | { state: "pending" | "blocked"; diagnostic: string; retryAfter?: number };
 
 export function getCrmConfig(env = process.env) {
+  if (env.CRM_ENQUIRY_ENABLED !== "true") return null;
   const rawUrl = env.CRM_ENQUIRY_URL;
   const secret = env.CRM_ENQUIRY_SECRET;
   if (!rawUrl && !secret) return null;

@@ -48,6 +48,11 @@ The public endpoint includes a honeypot, permits five valid attempts per hashed 
 
 ## CRM enquiry delivery
 
+CRM delivery is disabled by default while CRM is not deployed. Enquiries continue
+to be saved locally and appended to Google Sheets through the existing flow.
+Keep `CRM_ENQUIRY_ENABLED` unset or `false` on the server and scheduled worker.
+The integration code and pending records are retained for later delivery.
+
 The landing enquiry tables remain the durable source of truth and may live in the
 same PostgreSQL database as CRM. Deploy the CRM endpoint first, then apply the
 landing migrations with `bun run db:migrate`. When sharing CRM's database, configure
@@ -57,6 +62,9 @@ CRM's client records are created through the authenticated integration endpoint.
 
 Configure these **server-only** variables on both the Next.js server and scheduled worker:
 
+- `CRM_ENQUIRY_ENABLED`: set to exactly `true` only after deploying CRM and
+  configuring the endpoint and secret. This enables both API attempts and retry jobs;
+  due pending enquiries collected while disabled will be eligible for delivery.
 - `CRM_ENQUIRY_URL`: full HTTPS URL ending in `/api/integrations/enquiries`.
   HTTP is permitted only for localhost development.
 - `CRM_ENQUIRY_SECRET`: the same secret as CRM's `LANDING_ENQUIRY_SECRET`, at least
@@ -65,9 +73,11 @@ Configure these **server-only** variables on both the Next.js server and schedul
   may connect to it; a dedicated role restricted to the landing tables can be
   used for the public application's runtime access.
 
-If both variables are absent, delivery is disabled and new rows remain pending.
-Partial or invalid configuration is an error; local submission success is preserved.
-The API schedules an initial attempt with Next.js `after()` independently of Sheets.
+When the enable flag is unset or not `true`, credentials are ignored and no CRM
+requests are made. The retry command exits with a configuration error while disabled.
+When enabled, absent credentials leave delivery disabled; partial or invalid
+configuration is an error. Local submission success is preserved.
+When enabled, the API schedules an initial attempt with Next.js `after()` independently of Sheets.
 Use a hosting adapter that supports `after()` and allow at least 15 seconds of
 post-response execution. The scheduled worker remains necessary even with that support.
 

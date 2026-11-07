@@ -108,13 +108,15 @@ export async function POST(request: Request): Promise<Response> {
     console.error("Could not save enquiry", error);
     return Response.json({ error: "Could not save your enquiry. Please try again." }, { status: 500 });
   }
-  after(async () => {
-    try {
-      await deliverCrmEnquiry({ enquiryId: id });
-    } catch {
-      console.error("Enquiry saved; CRM delivery is pending");
-    }
-  });
+  if (process.env.CRM_ENQUIRY_ENABLED === "true") {
+    after(async () => {
+      try {
+        await deliverCrmEnquiry({ enquiryId: id });
+      } catch {
+        console.error("Enquiry saved; CRM delivery is pending");
+      }
+    });
+  }
   if (hasSheetsCredentials()) {
     after(async () => {
       try {

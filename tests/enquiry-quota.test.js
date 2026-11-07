@@ -19,6 +19,9 @@ let errorLog;
 let warningLog;
 const dialect = new PgDialect();
 const credentialKeys = [
+  "CRM_ENQUIRY_ENABLED",
+  "CRM_ENQUIRY_URL",
+  "CRM_ENQUIRY_SECRET",
   "GOOGLE_SERVICE_ACCOUNT_EMAIL",
   "GOOGLE_PRIVATE_KEY",
   "GOOGLE_SHEETS_SPREADSHEET_ID",
@@ -132,6 +135,7 @@ beforeEach(() => {
   });
   crmCalls = [];
   crmFails = false;
+  delete process.env.CRM_ENQUIRY_ENABLED;
   allowed = true;
   quotaFails = false;
   quotaResults = [];
@@ -219,7 +223,7 @@ test.each(["", "   ", undefined])("blank or omitted requirements are saved succe
   const response = await POST(request({ ...valid, message }));
   expect(response.status).toBe(201);
   expect(storedRows[0].message).toBeNull();
-  expect(afterCallbacks).toHaveLength(2);
+  expect(afterCallbacks).toHaveLength(1);
   await Promise.all(afterCallbacks.map((callback) => callback()));
   expect(appendRequests).toHaveLength(1);
   expect(markedIds).toEqual([storedRows[0].id]);
@@ -273,13 +277,12 @@ test("each database insert schedules an append for that exact enquiry", async ()
   expect(markedIds).toEqual([id]);
 });
 
-test("missing optional Sheets credentials schedules only CRM delivery", async () => {
+test("missing optional Sheets credentials leaves the enquiry saved without CRM delivery", async () => {
   for (const key of credentialKeys) delete process.env[key];
   expect((await POST(request(valid))).status).toBe(201);
   expect(inserts).toBe(1);
-  expect(afterCallbacks).toHaveLength(1);
-  await afterCallbacks[0]();
-  expect(crmCalls).toEqual([{ enquiryId: storedRows[0].id }]);
+  expect(afterCallbacks).toHaveLength(0);
+  expect(crmCalls).toHaveLength(0);
   expect(appendRequests).toHaveLength(0);
 });
 
@@ -386,6 +389,7 @@ test("decodes multibyte characters split across chunks", async () => {
 });
 
 test("CRM failure preserves local success and independent Sheets backup", async () => {
+  process.env.CRM_ENQUIRY_ENABLED = "true";
   crmFails = true;
   const response = await POST(request(valid));
   const result = await response.json();
@@ -395,4 +399,18 @@ test("CRM failure preserves local success and independent Sheets backup", async 
   expect(crmCalls).toEqual([{ enquiryId: result.id }]);
   expect(storedRows).toHaveLength(1);
   expect(markedIds).toEqual([result.id]);
+});
+
+test.each([undefined, "false"])("Sheets submission skips CRM even with credentials present (%s)", async (enabled) => {
+  if (enabled !== undefined) process.env.CRM_ENQUIRY_ENABLED = enabled;
+  process.env.CRM_ENQUIRY_URL = "https://crm.example/api/integrations/enquiries";
+  process.env.CRM_ENQUIRY_SECRET = "s".repeat(32);
+  const response = await POST(request(valid));
+  expect(response.status).toBe(201);
+  const { id } = await response.json();
+  expect(afterCallbacks).toHaveLength(1);
+  await Promise.all(afterCallbacks.map((callback) => callback()));
+  expect(crmCalls).toHaveLength(0);
+  expect(appendRequests).toHaveLength(1);
+  expect(markedIds).toEqual([id]);
 });

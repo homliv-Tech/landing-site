@@ -12,13 +12,18 @@ const config = { url: "https://crm.example/api/integrations/enquiries", secret: 
 
 test("CRM configuration is optional, private, and validates endpoint and secret", () => {
   expect(getCrmConfig({})).toBeNull();
-  expect(getCrmConfig({ CRM_ENQUIRY_URL: config.url, CRM_ENQUIRY_SECRET: config.secret })).toEqual(config);
+  expect(getCrmConfig({ CRM_ENQUIRY_ENABLED: "true", CRM_ENQUIRY_URL: config.url, CRM_ENQUIRY_SECRET: config.secret })).toEqual(config);
   for (const env of [
     { CRM_ENQUIRY_URL: config.url },
     { CRM_ENQUIRY_URL: config.url, CRM_ENQUIRY_SECRET: "short" },
     { CRM_ENQUIRY_URL: "http://crm.example/api/integrations/enquiries", CRM_ENQUIRY_SECRET: config.secret },
     { CRM_ENQUIRY_URL: config.url + "?secret=test", CRM_ENQUIRY_SECRET: config.secret },
-  ]) expect(() => getCrmConfig(env)).toThrow("Invalid CRM enquiry configuration");
+  ]) expect(() => getCrmConfig({ ...env, CRM_ENQUIRY_ENABLED: "true" })).toThrow("Invalid CRM enquiry configuration");
+});
+
+test.each([undefined, "false", "TRUE", "1"])("CRM stays disabled without explicit opt-in (%s)", (enabled) => {
+  expect(getCrmConfig({ CRM_ENQUIRY_ENABLED: enabled, CRM_ENQUIRY_URL: config.url, CRM_ENQUIRY_SECRET: config.secret })).toBeNull();
+  expect(getCrmConfig({ CRM_ENQUIRY_ENABLED: enabled, CRM_ENQUIRY_URL: "invalid" })).toBeNull();
 });
 
 test("saved payload excludes metadata and preserves original values and timestamp", () => {
