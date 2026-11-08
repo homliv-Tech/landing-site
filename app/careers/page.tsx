@@ -1,15 +1,15 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import styles from "./careers.module.css";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Careers | Homliv",
   description: "Careers at Homliv, a studio creating thoughtful homes. We have no current openings. Check back here for future opportunities.",
-  other: { "page-type": "service", "site-kind": "other" },
-};
+  path: "/careers",
+});
 
 export default function CareersPage() {
   return (

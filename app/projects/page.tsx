@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import SiteHeader from "@/components/site-header";
@@ -7,10 +7,11 @@ import ProjectIndex from "@/components/projects/project-index";
 import { getProjectCollectionKind, projects, projectPhotoUrl } from "@/lib/projects";
 import styles from "@/components/projects/projects.module.css";
 
-export const metadata: Metadata = {
-  title: "Projects | Homliv",
-  description: "Explore Homliv’s residential interior projects, from living spaces and bedrooms to the details that make a home.",
-};
+export const metadata = pageMetadata({
+  title: "Residential Interior Design Projects | Homliv",
+  description: "Explore Homliv’s residential interior design projects, from living spaces and bedrooms to the details that make a home.",
+  path: "/projects",
+});
 
 export default function ProjectsPage() {
   const kind = getProjectCollectionKind(projects);
