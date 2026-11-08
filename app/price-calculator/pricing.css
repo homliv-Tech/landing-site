@@ -1526,7 +1526,7 @@
   }
 
   .pricing-hero h1 {
-    font-size: clamp(42px, 12vw, 58px);
+    font-size: clamp(2rem, 10vw, 3.625rem);
   }
 
   .pricing-hero-copy p {
@@ -1653,4 +1653,23 @@
   .pricing-faq-trigger {
     transition: none;
   }
+}
+
+@media (max-width: 700px) {
+  .calc-tab { min-width: 0; }
+  .calc-tab-label { font-size: clamp(.75rem, 3.5vw, .875rem); }
+  .calc-btn { height: auto; padding-block: 12px; white-space: normal; line-height: 1.5; font-size: .875rem; }
+  .calc-panel-footer { flex-wrap: wrap; }
+  .calc-panel-footer .calc-btn { flex: 1 1 120px; }
+  .calc-choice-title { font-size: .875rem; }
+  .calc-choice-description, .calc-feature, .calc-hint, .calc-note,
+  .calc-addon-description, .calc-room-description, .calc-summary-subtitle,
+  .calc-summary-note, .calc-summary-fine, .pricing-info-steps p,
+  .pricing-faq-content p { font-size: .8125rem; line-height: 1.65; }
+  .calc-range-input, .calc-measure-trigger { font-size: 1rem; }
+  .calc-range-head, .calc-addon-head, .calc-summary-line { flex-wrap: wrap; }
+  .calc-room { flex-wrap: wrap; }
+  .calc-room-copy { flex-basis: 100px; }
+  .calc-stepper { margin-left: auto; }
+  .calc-summary-total { font-size: clamp(1.75rem, 9vw, 2.375rem); line-height: 1.15; }
 }

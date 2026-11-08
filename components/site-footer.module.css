@@ -92,7 +92,7 @@
   border-top: 1px solid color-mix(in srgb, var(--ivory) 15%, transparent);
   padding-top: 18px;
   color: color-mix(in srgb, var(--ivory) 85%, var(--charcoal));
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: .09em;
   line-height: 1.6;
 }
@@ -130,4 +130,9 @@
   .socialLink:hover {
     transform: none;
   }
+}
+
+@media (max-width: 400px) {
+  .navigation { gap: 8px 20px; font-size: .875rem; }
+  .wordmark { font-size: clamp(3rem, 17vw, 4rem); }
 }
