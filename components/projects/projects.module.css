@@ -2,7 +2,6 @@
    flat grounds and scoped hover styles; no effects or scroll animation. */
 .wrap { width: min(88%, 1280px); margin-inline: auto; }
 .page { background: var(--paper); }
-.page :global(.header--solid) { position: absolute; }
 .eyebrow { font-size: 13px; font-weight: 500; line-height: 1.5; color: var(--muted); margin: 0 0 24px; }
 .featured { background: var(--beige-light); height: auto; min-height: 800px; padding-block: 72px; }
 .sectionHead { display: flex; justify-content: space-between; align-items: flex-end; gap: 48px; margin-bottom: 48px; }
@@ -21,7 +20,7 @@
 .cardArrow { margin-left: auto; width: 44px; height: 44px; border: 1px solid var(--beige-dark); border-radius: 50%; display: grid; place-items: center; font-size: 22px; flex-shrink: 0; }
 .cardImage { position: relative; background: var(--beige); }
 .cardImage img, .heroImage img { display: block; width: 100%; height: auto; }
-.hero { height: calc(100svh - 0px); min-height: 740px; padding-block: 153px 48px; }
+.hero { height: calc(100svh - 105px); min-height: 635px; padding-block: 48px; }
 .heroGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; height: 100%; }
 .heroText { display: flex; flex-direction: column; align-items: flex-start; padding-right: 48px; }
 .heroText h1 { color: var(--forest); font-size: clamp(56px, 6.1vw, 88px); font-weight: 400; line-height: 1; letter-spacing: -.055em; margin: 0 0 32px; }
@@ -40,7 +39,7 @@
 .enquiry .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .enquiry .eyebrow { grid-column: 1 / -1; }
 .enquiry .textLink { align-self: end; justify-self: end; min-width: 260px; }
-.detailIntro { padding-block: 153px 64px; }
+.detailIntro { padding-block: 48px 64px; }
 .back { display: inline-block; font-size: 14px; margin-bottom: 64px; }
 .back:hover { text-decoration: underline; text-underline-offset: 6px; }
 .detailHeading { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
@@ -58,7 +57,7 @@
 .next .textLink { margin-top: 48px; }
 @media (hover: hover) and (pointer: fine) { .card:hover { transform: translateY(-2px); } .card:hover .cardArrow { background: var(--forest); color: var(--ivory); } }
 @media (min-width: 640px) and (max-width: 900px) {
-  .hero { min-height: 900px; }
+  .hero { min-height: 795px; }
   .heroGrid { grid-template-columns: 1fr; grid-template-rows: auto minmax(300px, 1fr); gap: 32px; }
   .heroText { padding-right: 0; }
   .heroText h1 { font-size: 64px; }
@@ -73,7 +72,7 @@
 }
 @media (max-width: 639px) {
   .wrap { width: calc(100% - 48px); }
-  .hero { height: 100svh; min-height: 740px; padding-block: 112px 24px; }
+  .hero { height: calc(100svh - 80px); min-height: 660px; padding-block: 32px 24px; }
   .heroGrid { grid-template-columns: 1fr; grid-template-rows: auto minmax(220px, 1fr); gap: 24px; }
   .heroText { padding-right: 0; }
   .heroText h1 { font-size: 48px; margin-bottom: 24px; }
@@ -95,7 +94,7 @@
   .filters button { font-size: 14px; }
   .enquiry .wrap, .detailHeading { grid-template-columns: 1fr; gap: 32px; }
   .enquiry .textLink { width: 100%; }
-  .detailIntro { padding-block: 112px 48px; }
+  .detailIntro { padding-block: 32px 48px; }
   .back { margin-bottom: 48px; }
   .detailHeading h1 { font-size: 56px; max-width: 10ch; }
   .detailHeading p { font-size: 16px; }
@@ -104,17 +103,6 @@
   .next .textLink { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { .card, .textLink { transition: none; } .card:hover { transform: none; } }
-@media (max-width: 639px) {
-  .page :global(.header .mobile-menu nav) { position: fixed; inset: 105px 0 0; width: 100%; padding: 24px; box-shadow: none; }
-  .page :global(.header .mobile-menu nav a) { min-height: 56px; }
-}
-.page :global(.header) { padding-inline: max(6%, calc((100% - 1280px) / 2)); }
-@media (max-width: 639px) { .page :global(.header) { padding-inline: 24px; } }
-@media (max-width: 639px) {
-  .page :global(.brand) { width: 120px; height: 60px; }
-  .page :global(.brand img) { width: 165px; height: 165px; left: -19px; top: -53px; }
-}
-
 /* Use each original image's proportions instead of fixed gallery frames. */
 .bento,
 .gallery .photoBento {

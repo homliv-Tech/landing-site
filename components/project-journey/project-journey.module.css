@@ -142,13 +142,13 @@
 }
 
 .flowButton:focus-visible {
-  outline: 3px solid #1a7545;
+  outline: 3px solid var(--forest);
   outline-offset: 4px;
 }
 
 .flowButton[aria-expanded="true"] {
-  border-color: #36844a;
-  background: #edf4e3;
+  border-color: var(--forest);
+  background: var(--beige-light);
   box-shadow: 0 0 0 3px #04673916;
 }
 
@@ -195,7 +195,7 @@
   place-items: center;
   border: 1px solid #d4e0ca;
   border-radius: 13px;
-  background: #edf3e5;
+  background: var(--beige-light);
   color: var(--forest);
   transition: background-color .2s ease, transform .2s ease;
 }
@@ -235,7 +235,7 @@
 
 .flowStep[data-final] .nodeNumber,
 .flowStep[data-final] .nodeAction {
-  color: #f8e9a4;
+  color: var(--sage);
 }
 
 .flowStep[data-final] .nodeSummary {
@@ -243,7 +243,7 @@
 }
 
 .flowStep[data-final] .nodeIcon {
-  border-color: #e8cc61;
+  border-color: var(--sage);
   background: var(--sun);
   color: #24472f;
 }
@@ -339,9 +339,9 @@
 
 .detailLabel {
   height: auto;
-  border-color: #ebde9f66;
+  border-color: var(--control-border);
   padding: 6px 10px;
-  color: #f8e9a4;
+  color: var(--sage);
   font-size: 10px;
   font-weight: 500;
   letter-spacing: .1em;
@@ -361,7 +361,7 @@
 }
 
 .closeButton:focus-visible {
-  outline: 2px solid #f8df77;
+  outline: 2px solid var(--sage);
   outline-offset: 2px;
 }
 
@@ -408,7 +408,7 @@
   border-top: 1px solid #b4cba333;
   margin: 0;
   padding-top: 15px;
-  color: #e4e9cd;
+  color: var(--on-dark-muted);
   font-size: 11px;
 }
 
@@ -451,13 +451,13 @@
 }
 
 .contactLink:focus-visible {
-  outline: 2px solid #1d5a36;
+  outline: 2px solid var(--forest);
   outline-offset: 4px;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .flowButton:hover {
-    border-color: #43874d;
+    border-color: var(--forest);
     background: #fffffc;
     box-shadow: 0 12px 24px #284c2b16;
     color: #214b31;
@@ -465,7 +465,7 @@
   }
 
   .flowButton:hover .nodeIcon {
-    background: #e5edcf;
+    background: var(--beige);
     transform: rotate(-6deg);
   }
 
@@ -479,12 +479,12 @@
   }
 
   .flowStep[data-final] .flowButton:hover {
-    background: #235e3b;
+    background: var(--forest);
     color: #fffef4;
   }
 
   .flowStep[data-final] .flowButton:hover .nodeIcon {
-    background: #ffe796;
+    background: var(--sage-hover);
   }
 }
 

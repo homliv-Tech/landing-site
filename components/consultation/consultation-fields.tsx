@@ -21,7 +21,7 @@ import { APARTMENT_TYPES, BUDGET_RANGES } from "@/lib/enquiry-options";
 import type { EnquiryFormValues, EnquiryRequest } from "@/lib/enquiry";
 
 const inputClassName =
-  "h-12 rounded-xl border-[#7c8578] bg-white px-4 text-base text-[#343a30] shadow-none placeholder:text-[#687064] focus-visible:border-[#087443] focus-visible:ring-[#087443]/15";
+  "h-12 rounded-xl border-(--control-border) bg-(--surface) px-4 text-base text-foreground shadow-none placeholder:text-muted-foreground focus-visible:border-primary focus-visible:ring-primary/15";
 
 function Required() {
   return (
