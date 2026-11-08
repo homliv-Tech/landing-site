@@ -60,7 +60,7 @@
   position: sticky;
   top: 105px;
   z-index: 8;
-  background: rgba(247, 245, 239, 0.94);
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
   backdrop-filter: blur(14px);
   border-top: 1px solid var(--beige-dark);
   border-bottom: 1px solid var(--beige-dark);
@@ -227,7 +227,7 @@
 .calc-progress-step.is-done .calc-progress-number {
   border-color: var(--mint);
   background: var(--mint);
-  color: var(--forest);
+  color: var(--ink);
 }
 
 .calc-panel {
@@ -318,11 +318,11 @@
 }
 
 .calc-btn--primary:hover {
-  background: var(--forest-dark);
+  background: color-mix(in srgb, var(--forest), var(--ink) 20%);
 }
 
 .calc-btn--ghost {
-  border-color: var(--beige-dark);
+  border-color: var(--input);
   background: transparent;
   color: var(--forest);
 }
@@ -338,7 +338,7 @@
 }
 
 .calc-btn--accent:hover {
-  background: #ffe45c;
+  background: color-mix(in srgb, var(--sun), var(--ink) 10%);
 }
 
 .calc-btn:disabled {
@@ -404,7 +404,7 @@
   gap: 10px;
   min-width: 0;
   padding: 16px;
-  border: 1px solid var(--beige-dark);
+  border: 1px solid var(--input);
   border-radius: 10px;
   background: var(--beige);
   font-weight: 400;
@@ -415,13 +415,13 @@
 }
 
 .calc-choice:hover {
-  border-color: var(--mint);
-  box-shadow: 0 8px 24px rgba(4, 103, 57, 0.08);
+  border-color: var(--forest);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--forest) 8%, transparent);
 }
 
 .calc-choice.is-selected {
   border-color: var(--forest);
-  background: #eaf4ee;
+  background: color-mix(in srgb, var(--mint) 18%, var(--paper));
   box-shadow: inset 0 0 0 1px var(--forest);
 }
 
@@ -452,7 +452,7 @@
 }
 
 .calc-choice.is-selected .calc-choice-media {
-  background: #e1f1e8;
+  background: color-mix(in srgb, var(--mint) 28%, var(--paper));
 }
 
 .calc-choice.is-selected .calc-diagram {
@@ -549,10 +549,10 @@
   width: 100%;
   margin: 0;
   padding: 12px 16px;
-  border: 1px solid #e8c94a;
+  border: 1px solid var(--sun);
   border-radius: 8px;
-  background: #fff8d6;
-  color: #6b5600;
+  background: color-mix(in srgb, var(--sun) 18%, var(--paper));
+  color: var(--ink);
   font-size: 12px;
   line-height: 1.5;
 }
@@ -589,7 +589,7 @@
   width: 100%;
   height: 46px;
   padding: 0 12px;
-  border-color: var(--beige-dark);
+  border-color: var(--input);
   border-radius: 8px;
   background: var(--popover);
   color: var(--ink);
@@ -645,7 +645,7 @@
   min-height: 150px;
   padding: 22px 22px 22px 46px;
   overflow: hidden;
-  border: 1px solid var(--beige-dark);
+  border: 1px solid var(--input);
   border-radius: 12px;
   background: var(--beige);
   font-weight: 400;
@@ -655,12 +655,12 @@
 }
 
 .calc-package:hover {
-  border-color: var(--mint);
+  border-color: var(--forest);
 }
 
 .calc-package.is-selected {
   border-color: var(--forest);
-  background: #eaf4ee;
+  background: color-mix(in srgb, var(--mint) 18%, var(--paper));
   box-shadow: inset 0 0 0 1px var(--forest);
 }
 
@@ -774,7 +774,7 @@
   align-items: flex-start;
   gap: 10px;
   padding: 12px;
-  border: 1px solid var(--beige-dark);
+  border: 1px solid var(--input);
   border-radius: 8px;
   background: var(--popover);
   font-weight: 400;
@@ -784,12 +784,12 @@
 }
 
 .calc-addon:hover {
-  border-color: var(--mint);
+  border-color: var(--forest);
 }
 
 .calc-addon:has([data-slot="checkbox"][data-checked]) {
   border-color: var(--forest);
-  background: #eaf4ee;
+  background: color-mix(in srgb, var(--mint) 18%, var(--paper));
 }
 
 .calc-checkbox {
@@ -844,24 +844,24 @@
 
 .wardrobe-body {
   fill: var(--beige-light);
-  stroke: #8f887b;
+  stroke: var(--forest);
   stroke-width: 1;
 }
 
 .wardrobe-loft {
   fill: var(--beige);
-  stroke: #8f887b;
+  stroke: var(--forest);
   stroke-width: 1;
 }
 
 .wardrobe-door {
-  stroke: #8f887b;
+  stroke: var(--forest);
   stroke-width: 1;
   opacity: 0.7;
 }
 
 .wardrobe-shelf {
-  stroke: #8f887b;
+  stroke: var(--forest);
   stroke-width: 1.5;
 }
 
@@ -913,7 +913,7 @@
   width: 84px;
   height: 44px;
   padding: 0 8px;
-  border-color: var(--beige-dark);
+  border-color: var(--input);
   border-radius: 8px;
   background: var(--popover);
   color: var(--ink);
@@ -947,7 +947,7 @@
 }
 
 .calc-range-slider [data-slot="slider-thumb"]:hover {
-  box-shadow: 0 0 0 1px var(--forest), 0 0 0 5px rgba(101, 195, 154, 0.25);
+  box-shadow: 0 0 0 1px var(--forest), 0 0 0 5px color-mix(in srgb, var(--mint) 25%, transparent);
 }
 
 .calc-range-scale {
@@ -997,7 +997,7 @@
 
 .calc-bhk {
   position: relative;
-  border: 1px solid var(--beige-dark);
+  border: 1px solid var(--input);
   border-radius: 10px;
   background: var(--beige);
   transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
@@ -1005,7 +1005,7 @@
 
 .calc-bhk.is-selected {
   border-color: var(--forest);
-  background: #eaf4ee;
+  background: color-mix(in srgb, var(--mint) 18%, var(--paper));
   box-shadow: inset 0 0 0 1px var(--forest);
 }
 
@@ -1053,7 +1053,7 @@
   align-items: center;
   gap: 10px;
   padding: 12px 14px;
-  border: 1px solid var(--beige-dark);
+  border: 1px solid var(--input);
   border-radius: 8px;
   background: var(--popover);
   font-weight: 400;
@@ -1062,7 +1062,7 @@
 
 .calc-bhk-variant.is-selected {
   border-color: var(--forest);
-  background: #eaf4ee;
+  background: color-mix(in srgb, var(--mint) 18%, var(--paper));
 }
 
 .calc-bhk-variant .calc-radio {
@@ -1155,7 +1155,7 @@
   place-items: center;
   width: 44px;
   height: 44px;
-  border: 1px solid var(--beige-dark);
+  border: 1px solid var(--input);
   border-radius: 50%;
   background: var(--popover);
   color: var(--forest);
@@ -1202,11 +1202,11 @@
   border-radius: 14px;
   background: var(--forest);
   color: var(--ivory);
-  box-shadow: 0 20px 50px rgba(4, 103, 57, 0.2);
+  box-shadow: 0 20px 50px color-mix(in srgb, var(--forest) 20%, transparent);
 }
 
 .calc-summary-eyebrow {
-  color: var(--mint);
+  color: var(--ivory);
   font-size: 9px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -1224,7 +1224,7 @@
 
 .calc-summary-subtitle {
   margin: 0;
-  color: #cfe7db;
+  color: var(--ivory);
   font-size: 10px;
   line-height: 1.6;
   letter-spacing: 0.02em;
@@ -1232,7 +1232,7 @@
 
 .calc-summary-separator {
   margin: 20px 0 0;
-  background: rgba(247, 245, 239, 0.22);
+  background: color-mix(in srgb, var(--ivory) 22%, transparent);
 }
 
 .calc-summary-lines {
@@ -1248,7 +1248,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(247, 245, 239, 0.18);
+  border-bottom: 1px solid color-mix(in srgb, var(--ivory) 18%, transparent);
   font-size: 12px;
 }
 
@@ -1261,7 +1261,7 @@
 }
 
 .calc-summary-line-copy small {
-  color: #a9cabb;
+  color: var(--ivory);
   font-size: 9px;
   line-height: 1.4;
   letter-spacing: 0.01em;
@@ -1275,7 +1275,7 @@
 
 .calc-summary-note {
   margin: 18px 0;
-  color: #cfe7db;
+  color: var(--ivory);
   font-size: 10px;
   line-height: 1.6;
 }
@@ -1287,7 +1287,7 @@
 
 .calc-summary-fine {
   margin: 14px 0 0;
-  color: #a9cabb;
+  color: var(--ivory);
   font-size: 9px;
   line-height: 1.6;
 }
@@ -1303,7 +1303,7 @@
   padding: 8px;
   border: 0;
   background: none;
-  color: #cfe7db;
+  color: var(--ivory);
   font-family: inherit;
   font-size: 10px;
   letter-spacing: 0.06em;
@@ -1313,7 +1313,13 @@
 
 .calc-summary-reset:hover {
   background: transparent;
-  color: var(--sun);
+  color: var(--ivory);
+  text-decoration: underline;
+}
+
+.calc-summary .calc-btn:focus-visible,
+.calc-summary-reset:focus-visible {
+  outline-color: var(--ivory);
 }
 
 .calc-summary-reset svg {

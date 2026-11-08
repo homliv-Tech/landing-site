@@ -15,7 +15,7 @@
   gap: 20px;
   border-top: 1px solid var(--beige-dark);
   padding-top: 18px;
-  color: #526553;
+  color: var(--forest);
   font-size: 10px;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -29,7 +29,7 @@
 
 .eyebrow {
   margin: 0 0 20px;
-  color: #366746;
+  color: var(--forest);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: .12em;
@@ -49,6 +49,7 @@
   border-radius: 6px;
   padding: 0 .1em;
   background: var(--sun);
+  color: var(--ink);
   font-weight: 500;
   white-space: nowrap;
 }
@@ -57,7 +58,7 @@
   max-width: 340px;
   align-self: end;
   margin: 0;
-  color: #576758;
+  color: var(--ink);
   font-size: 16px;
   line-height: 1.8;
 }
@@ -65,7 +66,7 @@
 .explorer {
   --flow-row-gap: 30px;
   --flow-column-gap: 40px;
-  border: 1px solid #c5d1bf;
+  border: 1px solid var(--beige-dark);
   border-radius: 26px;
   padding: clamp(18px, 3vw, 40px);
   background: var(--beige-light);
@@ -81,7 +82,7 @@
 }
 
 .boardLabel {
-  color: #395d40;
+  color: var(--forest);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: .1em;
@@ -92,7 +93,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #5d705d;
+  color: var(--forest);
   font-size: 12px;
 }
 
@@ -130,11 +131,11 @@
   align-items: stretch;
   justify-content: flex-start;
   gap: 18px;
-  border: 1px solid #7c9274;
+  border: 1px solid var(--input);
   border-radius: 18px;
   padding: 18px;
   background: var(--popover);
-  box-shadow: 0 3px 0 #24472f08;
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--forest) 5%, transparent);
   color: var(--forest);
   text-align: left;
   white-space: normal;
@@ -142,14 +143,14 @@
 }
 
 .flowButton:focus-visible {
-  outline: 3px solid #1a7545;
+  outline: 3px solid var(--forest);
   outline-offset: 4px;
 }
 
 .flowButton[aria-expanded="true"] {
-  border-color: #36844a;
-  background: #edf4e3;
-  box-shadow: 0 0 0 3px #04673916;
+  border-color: var(--forest);
+  background: color-mix(in srgb, var(--mint) 18%, var(--paper));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--forest) 9%, transparent);
 }
 
 .nodeTop {
@@ -160,7 +161,7 @@
 }
 
 .nodeNumber {
-  color: #426b46;
+  color: var(--forest);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: .1em;
@@ -170,7 +171,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #59715a;
+  color: var(--forest);
   font-size: 10px;
   font-weight: 500;
 }
@@ -193,9 +194,9 @@
   height: 42px;
   flex: 0 0 42px;
   place-items: center;
-  border: 1px solid #d4e0ca;
+  border: 1px solid var(--beige-dark);
   border-radius: 13px;
-  background: #edf3e5;
+  background: color-mix(in srgb, var(--mint) 20%, var(--paper));
   color: var(--forest);
   transition: background-color .2s ease, transform .2s ease;
 }
@@ -221,31 +222,31 @@
 }
 
 .nodeSummary {
-  color: #5b6e58;
+  color: var(--ink);
   font-size: 12px;
   font-weight: 400;
   line-height: 1.5;
 }
 
 .flowStep[data-final] .flowButton {
-  border-color: #245d3a;
+  border-color: var(--forest);
   background: var(--forest-dark);
-  color: #fffef4;
+  color: var(--ivory);
 }
 
 .flowStep[data-final] .nodeNumber,
 .flowStep[data-final] .nodeAction {
-  color: #f8e9a4;
+  color: var(--ivory);
 }
 
 .flowStep[data-final] .nodeSummary {
-  color: #e0ead6;
+  color: var(--ivory);
 }
 
 .flowStep[data-final] .nodeIcon {
-  border-color: #e8cc61;
+  border-color: var(--sun);
   background: var(--sun);
-  color: #24472f;
+  color: var(--ink);
 }
 
 .flowConnector {
@@ -254,8 +255,8 @@
   left: var(--connector-left);
   width: var(--connector-length);
   height: 1.5px;
-  background: #7c9274;
-  color: #5e7b50;
+  background: var(--input);
+  color: var(--forest);
   transform: rotate(var(--connector-angle));
   transform-origin: 0 50%;
   pointer-events: none;
@@ -289,14 +290,14 @@
 .footerLine {
   height: 1px;
   flex: 1;
-  background: #ccd7c5;
+  background: var(--beige-dark);
 }
 
 .completionLabel {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #365e3d;
+  color: var(--forest);
   font-size: 11px;
   font-weight: 500;
   text-align: center;
@@ -313,12 +314,12 @@
   max-height: min(460px, calc(100dvh - 32px), var(--available-height, 460px));
   overflow-y: auto;
   overscroll-behavior: contain;
-  border: 1px solid #6a9271;
+  border: 1px solid var(--mint);
   border-radius: 20px;
   padding: 22px;
   background: var(--forest-dark);
-  box-shadow: 0 20px 60px #102a2338;
-  color: #f9f9ed;
+  box-shadow: 0 20px 60px color-mix(in srgb, var(--ink) 22%, transparent);
+  color: var(--ivory);
   transform-origin: var(--transform-origin);
   transition: opacity .15s ease, transform .15s ease;
 }
@@ -339,9 +340,9 @@
 
 .detailLabel {
   height: auto;
-  border-color: #ebde9f66;
+  border-color: color-mix(in srgb, var(--sun) 40%, transparent);
   padding: 6px 10px;
-  color: #f8e9a4;
+  color: var(--ivory);
   font-size: 10px;
   font-weight: 500;
   letter-spacing: .1em;
@@ -352,22 +353,22 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  color: #f9f9ed;
+  color: var(--ivory);
 }
 
 .closeButton:hover {
-  background: #ffffff15;
-  color: #fff;
+  background: color-mix(in srgb, var(--ivory) 10%, transparent);
+  color: var(--ivory);
 }
 
 .closeButton:focus-visible {
-  outline: 2px solid #f8df77;
+  outline: 2px solid var(--ivory);
   outline-offset: 2px;
 }
 
 .detailTitle {
   margin: 0 0 14px;
-  color: #fffef4;
+  color: var(--ivory);
   font-size: 27px;
   font-weight: 500;
   letter-spacing: -.035em;
@@ -376,7 +377,7 @@
 
 .detailDescription {
   margin: 0;
-  color: #e0ead9;
+  color: var(--ivory);
   font-size: 15px;
   line-height: 1.75;
 }
@@ -392,10 +393,10 @@
 
 .highlight {
   height: auto;
-  border-color: #b4cba34d;
+  border-color: color-mix(in srgb, var(--mint) 30%, transparent);
   padding: 6px 10px;
-  background: #ffffff09;
-  color: #e6efdc;
+  background: color-mix(in srgb, var(--ivory) 4%, transparent);
+  color: var(--ivory);
   font-size: 11px;
   font-weight: 400;
   white-space: normal;
@@ -405,10 +406,10 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  border-top: 1px solid #b4cba333;
+  border-top: 1px solid color-mix(in srgb, var(--mint) 20%, transparent);
   margin: 0;
   padding-top: 15px;
-  color: #e4e9cd;
+  color: var(--ivory);
   font-size: 11px;
 }
 
@@ -429,7 +430,7 @@
 
 .sectionBottom p {
   margin: 0;
-  color: #596b59;
+  color: var(--ink);
   font-size: 13px;
   line-height: 1.7;
 }
@@ -437,35 +438,35 @@
 .contactLink {
   min-height: 44px;
   height: auto;
-  border: 1px solid #365f40;
+  border: 1px solid var(--forest);
   border-radius: 999px;
   padding: 12px 20px;
-  color: #214b31;
+  color: var(--forest);
   font-size: 13px;
   font-weight: 600;
 }
 
 .contactLink:hover {
   background: var(--forest);
-  color: #fff;
+  color: var(--ivory);
 }
 
 .contactLink:focus-visible {
-  outline: 2px solid #1d5a36;
+  outline: 2px solid var(--forest);
   outline-offset: 4px;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .flowButton:hover {
-    border-color: #43874d;
-    background: #fffffc;
-    box-shadow: 0 12px 24px #284c2b16;
-    color: #214b31;
+    border-color: var(--forest);
+    background: var(--paper);
+    box-shadow: 0 12px 24px color-mix(in srgb, var(--forest) 9%, transparent);
+    color: var(--forest);
     transform: translateY(-5px);
   }
 
   .flowButton:hover .nodeIcon {
-    background: #e5edcf;
+    background: color-mix(in srgb, var(--mint) 25%, var(--paper));
     transform: rotate(-6deg);
   }
 
@@ -479,12 +480,12 @@
   }
 
   .flowStep[data-final] .flowButton:hover {
-    background: #235e3b;
-    color: #fffef4;
+    background: color-mix(in srgb, var(--forest), var(--ink) 20%);
+    color: var(--ivory);
   }
 
   .flowStep[data-final] .flowButton:hover .nodeIcon {
-    background: #ffe796;
+    background: color-mix(in srgb, var(--sun), var(--paper) 20%);
   }
 }
 

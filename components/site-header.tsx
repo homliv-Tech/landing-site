@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 type CurrentPage = "home" | "pricing" | "team" | "careers" | "projects";
@@ -40,7 +41,7 @@ export default function SiteHeader({
   return (
     <header className={`header ${variant === "solid" ? "header--solid" : "header--overlay"}${scrolled ? " header--scrolled" : ""}`}>
       <Link href="/" className="brand" aria-label="Homliv home">
-        <img src="/homliv-logo.svg" alt="Homliv" width={210} height={210} />
+        <Image src="/homliv-logo.png" alt="" width={200} height={80} loading="eager" />
       </Link>
       <nav aria-label="Main navigation">
         {links.map((link) => (
