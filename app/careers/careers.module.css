@@ -187,12 +187,12 @@
 }
 
 @media (max-width: 639px) {
-  .hero { min-height: 844px; padding-top: 120px; padding-bottom: 24px; }
+  .hero { height: auto; min-height: 100svh; padding-top: 120px; padding-bottom: 24px; }
   .wrap { width: calc(100% - 48px); gap: 32px; grid-template-rows: auto minmax(200px, 1fr); }
   .page :global(.header) { padding-inline: 24px; }
   .copy { display: flex; }
   .eyebrow { margin-bottom: 16px; font-size: 13px; }
-  .copy h1 { font-size: clamp(36px, 10vw, 48px); }
+  .copy h1 { font-size: clamp(2rem, 9vw, 3rem); }
   .lead { font-size: 16px; line-height: 1.5; margin: 16px 0 24px; }
   .teamLink { width: 100%; }
   .openings { margin-top: 24px; }

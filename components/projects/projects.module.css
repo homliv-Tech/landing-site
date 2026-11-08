@@ -13,6 +13,7 @@
 .textLink span { font-size: 22px; }
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px 24px; }
 .card { display: flex; flex-direction: column; min-width: 0; transition: transform 180ms; }
+.cardHeading > div { min-width: 0; }
 .cardHeading { display: flex; gap: 24px; align-items: center; padding-block: 0 24px; }
 .number { color: var(--muted); align-self: flex-start; padding-top: 3px; font-size: 13px; }
 .category { display: block; color: var(--muted); font-size: 13px; margin-bottom: 8px; }
@@ -75,7 +76,7 @@
   .hero { min-height: calc(740px - var(--project-header-height)); padding-block: 32px 24px; }
   .heroGrid { grid-template-columns: 1fr; grid-template-rows: auto minmax(220px, 1fr); gap: 24px; }
   .heroText { padding-right: 0; }
-  .heroText h1 { font-size: 48px; margin-bottom: 24px; }
+  .heroText h1 { font-size: clamp(2rem, 10vw, 3rem); margin-bottom: 24px; }
   .heroText > p:not(.eyebrow) { font-size: 16px; line-height: 1.5; margin-bottom: 16px; }
   .heroText .eyebrow { margin-bottom: 16px; }
   .heroText .textLink { width: 100%; margin-top: 0; }
@@ -88,7 +89,11 @@
   .cardHeading { gap: 16px; padding-bottom: 16px; }
   .cardHeading h3 { font-size: 26px; }
   .index, .enquiry, .next { padding-block: 64px; }
-  .indexHeading { align-items: center; }
+  .indexHeading { align-items: baseline; flex-wrap: wrap; gap: 12px; }
+  .sectionHead h2, .enquiry h2 { font-size: clamp(2rem, 9vw, 2.75rem); }
+  .textLink { min-width: 0; max-width: 100%; gap: 24px; }
+  .heroText .textLink, .enquiry .textLink { min-width: 0; }
+  .next .wrap > a:not(.textLink) { font-size: clamp(2rem, 9vw, 3rem); gap: 16px; }
   .indexHeading h2 { font-size: 30px; }
   .filters { padding-block: 24px 32px; gap: 8px 20px; }
   .filters button { font-size: 14px; }
@@ -96,7 +101,7 @@
   .enquiry .textLink { width: 100%; }
   .detailIntro { padding-block: 32px 48px; }
   .back { margin-bottom: 48px; }
-  .detailHeading h1 { font-size: 56px; max-width: 10ch; }
+  .detailHeading h1 { font-size: clamp(2.25rem, 11vw, 3.5rem); max-width: 10ch; }
   .detailHeading p { font-size: 16px; }
   .gallery { padding-bottom: 64px; }
   .gallery .wrap { gap: 16px; }

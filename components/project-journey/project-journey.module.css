@@ -39,7 +39,7 @@
 .heading {
   margin: 0;
   color: var(--forest);
-  font-size: clamp(38px, 5vw, 66px);
+  font-size: clamp(2rem, 5vw + 1rem, 4.125rem);
   font-weight: 400;
   letter-spacing: -.05em;
   line-height: 1.13;
@@ -585,4 +585,11 @@
   .flowButton:hover .nodeAction svg {
     transform: none;
   }
+}
+
+@media (max-width: 699px) {
+  .heading strong { white-space: normal; box-decoration-break: clone; }
+  .sectionTop { flex-wrap: wrap; gap: 12px 20px; font-size: .75rem; }
+  .nodeSummary, .exploreHint, .detailFooter { font-size: .875rem; line-height: 1.6; }
+  .contactLink { max-width: 100%; white-space: normal; line-height: 1.5; }
 }
