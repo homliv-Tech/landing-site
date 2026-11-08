@@ -2,6 +2,95 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+.whatsapp-contact {
+  position: fixed;
+  right: max(28px, env(safe-area-inset-right));
+  bottom: max(28px, env(safe-area-inset-bottom));
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--ivory) 22%, transparent);
+  background: var(--forest);
+  color: var(--ivory);
+  box-shadow: 0 4px 16px rgb(37 43 38 / 14%);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.whatsapp-contact-icon {
+  width: 26px;
+  height: 26px;
+  background: currentColor;
+  mask: url("/icons/si-whatsapp.svg") center / contain no-repeat;
+}
+
+.whatsapp-contact-label {
+  position: absolute;
+  right: calc(100% + 12px);
+  padding: 9px 14px;
+  border: 1px solid var(--beige);
+  border-radius: 6px;
+  background: var(--ivory);
+  color: var(--forest);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(4px);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.whatsapp-contact:focus-visible .whatsapp-contact-label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (hover: hover) {
+  .whatsapp-contact:hover .whatsapp-contact-label {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 700px) {
+  .whatsapp-contact {
+    right: max(18px, env(safe-area-inset-right));
+    bottom: max(18px, env(safe-area-inset-bottom));
+    width: 52px;
+    height: 52px;
+  }
+}
+
+.whatsapp-contact:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgb(37 43 38 / 20%);
+}
+
+.whatsapp-contact:active {
+  transform: scale(.96);
+}
+
+.whatsapp-contact:focus-visible {
+  outline: 3px solid var(--forest);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .whatsapp-contact,
+  .whatsapp-contact-label {
+    transition: none;
+  }
+
+  .whatsapp-contact:hover,
+  .whatsapp-contact:active,
+  .whatsapp-contact .whatsapp-contact-label {
+    transform: none;
+  }
+}
+
 :root {
   --background: #F8F7F2;
   --foreground: #252B26;

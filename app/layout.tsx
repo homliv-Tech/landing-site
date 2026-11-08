@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import Analytics from "@/components/analytics";
+import WhatsAppContact from "@/components/whatsapp-contact";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Analytics />
         {children}
+        <WhatsAppContact />
       </body>
     </html>
   );
