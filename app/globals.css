@@ -215,11 +215,6 @@ footer button:focus-visible {
   align-items: center;
   justify-content: center;
   padding: 5px 8px;
-  border-radius: 9px;
-}
-
-.header--overlay:not(.header--scrolled) .brand {
-  background: var(--ivory);
 }
 
 .brand img {
