@@ -110,10 +110,7 @@
 }
 .page :global(.header) { padding-inline: max(6%, calc((100% - 1280px) / 2)); }
 @media (max-width: 639px) { .page :global(.header) { padding-inline: 24px; } }
-@media (max-width: 639px) {
-  .page :global(.brand) { width: 120px; height: 60px; }
-  .page :global(.brand img) { width: 165px; height: 165px; left: -19px; top: -53px; }
-}
+@media (max-width: 400px) { .page :global(.header) { padding-inline: 4%; } }
 
 /* Use each original image's proportions instead of fixed gallery frames. */
 .bento,

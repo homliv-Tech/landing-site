@@ -190,7 +190,6 @@
   .hero { min-height: 844px; padding-top: 120px; padding-bottom: 24px; }
   .wrap { width: calc(100% - 48px); gap: 32px; grid-template-rows: auto minmax(200px, 1fr); }
   .page :global(.header) { padding-inline: 24px; }
-  .page :global(.brand) { width: 120px; flex-shrink: 0; }
   .copy { display: flex; }
   .eyebrow { margin-bottom: 16px; font-size: 13px; }
   .copy h1 { font-size: clamp(36px, 10vw, 48px); }
@@ -200,6 +199,10 @@
   .openings h2 { font-size: 24px; margin: 12px 0 8px; }
   .openings p { font-size: 16px; line-height: 1.5; }
   .photo { border-radius: 8px; }
+}
+
+@media (max-width: 400px) {
+  .page :global(.header) { padding-inline: 4%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
