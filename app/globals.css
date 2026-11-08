@@ -218,6 +218,10 @@ footer button:focus-visible {
   border-radius: 9px;
 }
 
+.header--overlay:not(.header--scrolled) .brand {
+  background: var(--ivory);
+}
+
 .brand img {
   display: block;
   width: 100%;
