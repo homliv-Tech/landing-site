@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -11,7 +12,20 @@ type Props = { params: Promise<{ slug: string }> };
 export function generateStaticParams() { return projects.map(({ slug }) => ({ slug })); }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = getProject((await params).slug);
-  return project ? { title: `${project.title} | Homliv`, description: project.description, robots: project.inspiration ? { index: false, follow: true } : undefined } : {};
+  if (!project) notFound();
+  const cover = project.photos[0];
+  return pageMetadata({
+    title: `${project.title} | ${project.category} | Homliv`,
+    description: project.description,
+    path: `/projects/${project.slug}`,
+    noIndex: project.inspiration,
+    image: {
+      url: projectPhotoUrl(cover),
+      width: cover.width,
+      height: cover.height,
+      alt: cover.alt,
+    },
+  });
 }
 export default async function ProjectPage({ params }: Props) {
   const project = getProject((await params).slug);

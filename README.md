@@ -174,3 +174,17 @@ and form/Sheets regressions. These tests use no deployment database or CRM servi
 The projects index and individual multi-photo galleries use `lib/projects.ts`.
 See [the project photography guide](docs/projects.md) to replace the temporary
 inspiration collections with approved projects and public Cloudflare R2 photos.
+
+## Search engine metadata
+
+Each public page defines its own title, description, canonical URL, Open Graph
+and Twitter card metadata through `lib/seo.ts`. Project galleries use their cover
+image for social sharing. The root layout includes Organization and WebSite
+JSON-LD using the existing brand and contact information.
+
+`SITE_URL` defaults to `https://homliv.co.in`. Set it to the canonical production
+origin before building if the deployment uses a different domain. `/robots.txt`
+advertises `/sitemap.xml`; the sitemap includes public pages and approved projects
+with their image URLs. Inspiration galleries retain `noindex` and are excluded
+from the sitemap. Modification dates are omitted until real content dates exist.
+After deploying, submit `/sitemap.xml` in your search engine webmaster console.

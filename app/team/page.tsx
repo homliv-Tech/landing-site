@@ -1,14 +1,15 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import SiteFooter from "@/components/site-footer";
 import SiteHeader from "@/components/site-header";
 import { assetUrl } from "@/lib/assets";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Our Team | Homliv",
-  description: "Meet the people behind Homliv.",
-};
+  description: "Meet Homliv’s founders and design team, the people bringing ideas, creativity and care to thoughtful homes and residential interiors.",
+  path: "/team",
+});
 
 const team = [
   { role:"Founder", name: "Vinayak", photo: assetUrl("images/team/homliv-vinayak.png"), crop: "vinayak" },

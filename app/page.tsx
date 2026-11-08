@@ -1,3 +1,4 @@
+import { pageMetadata, siteDescription } from "@/lib/seo";
 import FeaturedProjects from "@/components/projects/featured-projects";
 import SiteFooter from "@/components/site-footer";
 import SiteHeader from "@/components/site-header";
@@ -5,6 +6,12 @@ import TextPreloader from "@/components/prsui/text-preloader";
 import ConsultationForm from "@/components/consultation-form";
 import { ProjectJourney } from "@/components/project-journey/project-journey";
 import VerticalCutReveal from "@/components/fancy/text/vertical-cut-reveal";
+
+export const metadata = pageMetadata({
+  title: "Homliv | Architecture & Residential Interior Design",
+  description: siteDescription,
+  path: "/",
+});
 
 const Arrow = () => <span aria-hidden="true">↗</span>;
 
