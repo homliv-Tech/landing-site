@@ -230,17 +230,17 @@
 
 .flowStep[data-final] .flowButton {
   border-color: var(--forest);
-  background: var(--forest-dark);
-  color: var(--ivory);
+  background: color-mix(in srgb, var(--mint) 25%, var(--paper));
+  color: var(--forest);
 }
 
 .flowStep[data-final] .nodeNumber,
 .flowStep[data-final] .nodeAction {
-  color: var(--ivory);
+  color: var(--forest);
 }
 
 .flowStep[data-final] .nodeSummary {
-  color: var(--ivory);
+  color: var(--ink);
 }
 
 .flowStep[data-final] .nodeIcon {
@@ -317,9 +317,9 @@
   border: 1px solid var(--mint);
   border-radius: 20px;
   padding: 22px;
-  background: var(--forest-dark);
+  background: color-mix(in srgb, var(--mint) 25%, var(--paper));
   box-shadow: 0 20px 60px color-mix(in srgb, var(--ink) 22%, transparent);
-  color: var(--ivory);
+  color: var(--ink);
   transform-origin: var(--transform-origin);
   transition: opacity .15s ease, transform .15s ease;
 }
@@ -340,9 +340,9 @@
 
 .detailLabel {
   height: auto;
-  border-color: color-mix(in srgb, var(--sun) 40%, transparent);
+  border-color: var(--mint);
   padding: 6px 10px;
-  color: var(--ivory);
+  color: var(--forest);
   font-size: 10px;
   font-weight: 500;
   letter-spacing: .1em;
@@ -353,22 +353,22 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  color: var(--ivory);
+  color: var(--forest);
 }
 
 .closeButton:hover {
-  background: color-mix(in srgb, var(--ivory) 10%, transparent);
-  color: var(--ivory);
+  background: color-mix(in srgb, var(--mint) 45%, var(--paper));
+  color: var(--forest);
 }
 
 .closeButton:focus-visible {
-  outline: 2px solid var(--ivory);
+  outline: 2px solid var(--forest);
   outline-offset: 2px;
 }
 
 .detailTitle {
   margin: 0 0 14px;
-  color: var(--ivory);
+  color: var(--forest);
   font-size: 27px;
   font-weight: 500;
   letter-spacing: -.035em;
@@ -377,7 +377,7 @@
 
 .detailDescription {
   margin: 0;
-  color: var(--ivory);
+  color: var(--ink);
   font-size: 15px;
   line-height: 1.75;
 }
@@ -393,10 +393,10 @@
 
 .highlight {
   height: auto;
-  border-color: color-mix(in srgb, var(--mint) 30%, transparent);
+  border-color: var(--mint);
   padding: 6px 10px;
-  background: color-mix(in srgb, var(--ivory) 4%, transparent);
-  color: var(--ivory);
+  background: color-mix(in srgb, var(--mint) 12%, var(--paper));
+  color: var(--forest);
   font-size: 11px;
   font-weight: 400;
   white-space: normal;
@@ -406,10 +406,10 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  border-top: 1px solid color-mix(in srgb, var(--mint) 20%, transparent);
+  border-top: 1px solid var(--mint);
   margin: 0;
   padding-top: 15px;
-  color: var(--ivory);
+  color: var(--ink);
   font-size: 11px;
 }
 
@@ -459,7 +459,7 @@
 @media (hover: hover) and (pointer: fine) {
   .flowButton:hover {
     border-color: var(--forest);
-    background: var(--paper);
+    background: color-mix(in srgb, var(--mint) 18%, var(--paper));
     box-shadow: 0 12px 24px color-mix(in srgb, var(--forest) 9%, transparent);
     color: var(--forest);
     transform: translateY(-5px);
@@ -480,8 +480,8 @@
   }
 
   .flowStep[data-final] .flowButton:hover {
-    background: color-mix(in srgb, var(--forest), var(--ink) 20%);
-    color: var(--ivory);
+    background: color-mix(in srgb, var(--mint) 35%, var(--paper));
+    color: var(--forest);
   }
 
   .flowStep[data-final] .flowButton:hover .nodeIcon {
