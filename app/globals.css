@@ -189,11 +189,22 @@ footer button:focus-visible {
 
 .header--overlay {
   position: fixed;
-  background: var(--ivory);
+  background: transparent;
+  color: var(--ivory);
 }
 
 .header--overlay.header--scrolled {
   background: var(--ivory);
+  color: var(--ink);
+}
+
+.header--overlay:not(.header--scrolled) > nav a:hover {
+  color: var(--ivory);
+}
+
+.header--overlay:not(.header--scrolled) a:focus-visible,
+.header--overlay:not(.header--scrolled) .mobile-menu summary:focus-visible {
+  outline-color: var(--ivory);
 }
 
 .brand {

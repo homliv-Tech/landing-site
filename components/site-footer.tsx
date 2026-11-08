@@ -47,7 +47,7 @@ export default function SiteFooter({ photoCredit = false }: { photoCredit?: bool
         </div>
         <div className={styles.bottom}>
           <span>© 2026 HOMLIV. ALL RIGHTS RESERVED.</span>
-          {photoCredit && <a href="https://unsplash.com/">Photography via Unsplash</a>}
+          
           <a href="#top">BACK TO TOP ↑</a>
         </div>
       </div>
