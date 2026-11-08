@@ -40,7 +40,7 @@ export default function SiteHeader({
   return (
     <header className={`header ${variant === "solid" ? "header--solid" : "header--overlay"}${scrolled ? " header--scrolled" : ""}`}>
       <Link href="/" className="brand" aria-label="Homliv home">
-        <img src="/homliv-logo.svg" alt="Homliv" width={210} height={210} />
+        <img src="/homliv-logo.png" alt="Homliv" width={1983} height={793} />
       </Link>
       <nav aria-label="Main navigation">
         {links.map((link) => (
